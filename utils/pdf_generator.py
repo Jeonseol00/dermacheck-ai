@@ -285,7 +285,14 @@ def generate_soap_pdf(
         0, 'C')
     
     # Return PDF as bytes
-    return pdf.output(dest='S').encode('latin-1')
+    # fpdf2 v2.x: output(dest='S') already returns bytes, no need to encode
+    pdf_output = pdf.output(dest='S')
+    
+    # Handle both str and bytes return types (fpdf2 version compatibility)
+    if isinstance(pdf_output, str):
+        return pdf_output.encode('latin-1')
+    else:
+        return pdf_output  # Already bytes
 
 
 def create_downloadable_soap_pdf(consultation_data: Dict, filename: str = "soap_medical_summary.pdf") -> str:
