@@ -49,11 +49,13 @@ class SymptomAnalyzer:
                     self.model = genai.GenerativeModel('gemini-pro')
         
         # Configure for medical documentation
+        # v2.0.6: Increased max_output_tokens for complete SOAP notes
         self.generation_config = {
             "temperature": 0.3,  # Lower for more factual, consistent output
             "top_p": 0.8,
             "top_k": 40,
-            "max_output_tokens": 2048,
+            "max_output_tokens": 8192,  # Increased from 2048 - Gemini 2.5 is verbose!
+            # SOAP notes need space for full S/O/A/P sections with details
         }
         
         self.safety_settings = [
