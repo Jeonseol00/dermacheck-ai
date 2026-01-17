@@ -26,3 +26,4 @@ kaggle==1.5.16
 # Testing
 pytest==8.0.0
 pytest-cov==4.1.0
+fpdf2>=2.7.0
