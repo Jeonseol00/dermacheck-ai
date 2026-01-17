@@ -1,13 +1,14 @@
 """
-Symptom Analyzer - Module B
+Symptom Analyzer - Module B (v2.0.5)
 Converts patient symptoms (free text) to structured SOAP medical notes
-Uses Med-Gemma for medical entity extraction and formatting
+Uses Gemini 2.5 Flash for medical entity extraction and formatting
 """
 from typing import Dict, List, Optional
 import google.generativeai as genai
 from datetime import datetime
 from utils.config import Config
 import re
+import json
 
 
 class SymptomAnalyzer:
@@ -16,7 +17,7 @@ class SymptomAnalyzer:
     """
     
     def __init__(self):
-        """Initialize symptom analyzer with Med-Gemma"""
+        """Initialize symptom analyzer with latest Gemini models"""
         if not Config.GOOGLE_API_KEY:
             raise ValueError("GOOGLE_API_KEY not configured for symptom analysis")
         
@@ -110,7 +111,7 @@ class SymptomAnalyzer:
     
     def _build_soap_prompt(self, symptoms: str, context: Optional[Dict]) -> str:
         """
-        Build detailed prompt for Med-Gemma to generate SOAP note
+        Build detailed prompt for Gemini to generate SOAP note
         
         Args:
             symptoms: Patient symptom description
@@ -145,6 +146,8 @@ class SymptomAnalyzer:
 
 **Generate a structured SOAP note with the following format:**
 
+**IMPORTANT: Use this EXACT format with clear section headers. ALL 4 SECTIONS ARE MANDATORY:**
+
 **S (SUBJECTIVE):**
 - Chief Complaint: [Main symptom in medical terminology]
 - History of Present Illness (HPI):
@@ -159,7 +162,7 @@ class SymptomAnalyzer:
 **O (OBJECTIVE):**
 - Vital Signs: [To be measured - note what should be checked]
 - Physical Examination Findings: [What doctor should examine]
-- [If skin lesion from image analysis was mentioned, note it here]
+- [If no data: write "Pending physical examination"]
 
 **A (ASSESSMENT):**
 - Differential Diagnoses (in order of likelihood):
@@ -169,26 +172,21 @@ class SymptomAnalyzer:
 - Clinical Impression: [Summary assessment]
 
 **P (PLAN):**
-- Diagnostic Tests:
-  - [Lab tests to order, if any]
-  - [Imaging studies, if indicated]
-- Treatment:
-  - Medications: [If symptomatic treatment appropriate]
-  - Non-pharmacological: [Rest, diet, etc.]
-- Follow-up:
-  - Schedule: [When to return]
-  - Warning signs: [Red flags to watch for]
+- Diagnostic Tests: [Specific tests recommended]
+- Treatment: [Medications and non-pharmacological interventions]
+- Follow-up: [When to return and warning signs]
 - Referrals: [If specialist consultation needed]
 
-**CRITICAL REMINDERS:**
-1. Use proper medical terminology but explain complex terms
-2. Be specific with anatomical locations (e.g., "left upper extremity" not "arm")
-3. Include time-based information (onset, duration)
-4. Assessment should be differential, not definitive diagnosis
-5. Plans should be actionable and safe
-6. Always include red flag warnings
+**CRITICAL FORMATTING REQUIREMENTS:**
+1. Start each main section with the EXACT header format: **S (SUBJECTIVE):**
+2. Include ALL 4 sections (S, O, A, P) - even if brief
+3. Use proper medical terminology
+4. Be specific with anatomical locations
+5. Include time-based information
+6. Assessment should be differential, not definitive
+7. Plans must be actionable and safe
 
-Generate the SOAP note now:
+Generate the complete SOAP note now with ALL 4 sections:
 """
         
         return prompt
@@ -196,6 +194,7 @@ Generate the SOAP note now:
     def _parse_soap_response(self, soap_text: str) -> Dict:
         """
         Parse SOAP response into structured components
+        v2.0.5: Ultra-lenient parsing for Gemini 2.5 format variations
         
         Args:
             soap_text: Raw SOAP note text from LLM
@@ -203,7 +202,6 @@ Generate the SOAP note now:
         Returns:
             Dictionary with S, O, A, P components
         """
-        # Extract sections using regex
         sections = {
             'subjective': '',
             'objective': '',
@@ -211,31 +209,92 @@ Generate the SOAP note now:
             'plan': ''
         }
         
-        # Find each section
-        patterns = {
-            'subjective': r'\*\*S.*?SUBJECTIVE.*?\*\*:?(.*?)(?=\*\*O|\*\*OBJECTIVE|\Z)',
-            'objective': r'\*\*O.*?OBJECTIVE.*?\*\*:?(.*?)(?=\*\*A|\*\*ASSESSMENT|\Z)',
-            'assessment': r'\*\*A.*?ASSESSMENT.*?\*\*:?(.*?)(?=\*\*P|\*\*PLAN|\Z)',
-            'plan': r'\*\*P.*?PLAN.*?\*\*:?(.*?)(?=\Z)'
-        }
+        # STRATEGY 1: Try multiple flexible regex patterns
+        pattern_variants = [
+            # Variant 1: **S (SUBJECTIVE):** format
+            {
+                'subjective': r'\*\*\s*S\s*[\(\-]*\s*SUBJECTIVE\s*[\)\s]*:?\s*\*\*\s*(.*?)(?=\*\*\s*O\s*[\(\-]|$)',
+                'objective': r'\*\*\s*O\s*[\(\-]*\s*OBJECTIVE\s*[\)\s]*:?\s*\*\*\s*(.*?)(?=\*\*\s*A\s*[\(\-]|$)',
+                'assessment': r'\*\*\s*A\s*[\(\-]*\s*ASSESSMENT\s*[\)\s]*:?\s*\*\*\s*(.*?)(?=\*\*\s*P\s*[\(\-]|$)',
+                'plan': r'\*\*\s*P\s*[\(\-]*\s*PLAN\s*[\)\s]*:?\s*\*\*\s*(.*?)$'
+            },
+            # Variant 2: **SUBJECTIVE:** format (no S prefix)
+            {
+                'subjective': r'\*\*\s*SUBJECTIVE\s*:?\s*\*\*\s*(.*?)(?=\*\*\s*OBJECTIVE|$)',
+                'objective': r'\*\*\s*OBJECTIVE\s*:?\s*\*\*\s*(.*?)(?=\*\*\s*ASSESSMENT|$)',
+                'assessment': r'\*\*\s*ASSESSMENT\s*:?\s*\*\*\s*(.*?)(?=\*\*\s*PLAN|$)',
+                'plan': r'\*\*\s*PLAN\s*:?\s*\*\*\s*(.*?)$'
+            }
+        ]
         
-        for section, pattern in patterns.items():
-            match = re.search(pattern, soap_text, re.DOTALL | re.IGNORECASE)
-            if match:
-                sections[section] = match.group(1).strip()
+        for pattern_set in pattern_variants:
+            temp_sections = {}
+            all_found = True
+            
+            for section, pattern in pattern_set.items():
+                match = re.search(pattern, soap_text, re.DOTALL | re.IGNORECASE)
+                if match:
+                    content = match.group(1).strip()
+                    content = re.sub(r'^\*+|\*+$', '', content).strip()
+                    temp_sections[section] = content
+                else:
+                    all_found = False
+                    break
+            
+            if all_found and temp_sections['subjective']:
+                sections = temp_sections
+                break
         
-        # If regex fails, use simple split
-        if not any(sections.values()):
-            parts = soap_text.split('**')
-            for i, part in enumerate(parts):
-                if 'SUBJECTIVE' in part.upper() and i+1 < len(parts):
-                    sections['subjective'] = parts[i+1].strip()
-                elif 'OBJECTIVE' in part.upper() and i+1 < len(parts):
-                    sections['objective'] = parts[i+1].strip()
-                elif 'ASSESSMENT' in part.upper() and i+1 < len(parts):
-                    sections['assessment'] = parts[i+1].strip()
-                elif 'PLAN' in part.upper() and i+1 < len(parts):
-                    sections['plan'] = parts[i+1].strip()
+        # STRATEGY 2: Line-by-line parsing if regex failed
+        if not sections['subjective']:
+            lines = soap_text.split('\n')
+            current_section = None
+            current_content = []
+            
+            for line in lines:
+                line_clean = line.strip()
+                line_upper = line_clean.upper()
+                
+                # Check for section headers
+                is_header = False
+                if 'SUBJECTIVE' in line_upper and ('**S' in line or '**SUBJECTIVE' in line):
+                    if current_section and current_content:
+                        sections[current_section] = '\n'.join(current_content).strip()
+                    current_section = 'subjective'
+                    current_content = []
+                    is_header = True
+                elif 'OBJECTIVE' in line_upper and ('**O' in line or '**OBJECTIVE' in line):
+                    if current_section and current_content:
+                        sections[current_section] = '\n'.join(current_content).strip()
+                    current_section = 'objective'
+                    current_content = []
+                    is_header = True
+                elif 'ASSESSMENT' in line_upper and ('**A' in line or '**ASSESSMENT' in line):
+                    if current_section and current_content:
+                        sections[current_section] = '\n'.join(current_content).strip()
+                    current_section = 'assessment'
+                    current_content = []
+                    is_header = True
+                elif 'PLAN' in line_upper and ('**P' in line or '**PLAN' in line):
+                    if current_section and current_content:
+                        sections[current_section] = '\n'.join(current_content).strip()
+                    current_section = 'plan'
+                    current_content = []
+                    is_header = True
+                elif current_section and not is_header:
+                    current_content.append(line_clean)
+            
+            # Save last section
+            if current_section and current_content:
+                sections[current_section] = '\n'.join(current_content).strip()
+        
+        # Ensure sensible defaults for empty sections
+        if not sections['objective']:
+            sections['objective'] = "No objective data provided (pending physical examination)"
+        if not sections['assessment']:
+            sections['assessment'] = "[Assessment parsing failed - please review AI response above or consult healthcare provider]"
+        if not sections['plan']:
+            sections['plan'] = "[Plan parsing failed - please consult healthcare provider for recommendations]"
         
         return sections
     
