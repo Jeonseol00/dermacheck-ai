@@ -586,10 +586,15 @@ def page_general_consultation():
                     patient_context = {}
                     if age:
                         patient_context['age'] = age
+                        st.session_state.patient_age = age
                     if gender and gender != "Select...":
                         patient_context['gender'] = gender
+                        st.session_state.patient_gender = gender
                     if medical_history:
                         patient_context['medical_history'] = medical_history
+                    
+                    # Store patient name if we had a field (for future)
+                    st.session_state.patient_name = None  # Could add name field later
                     
                     # Analyze symptoms
                     result = st.session_state.symptom_analyzer.analyze_symptoms(
@@ -728,14 +733,45 @@ def display_consultation_results(consultation):
     
     # Export option
     st.markdown("---")
+    st.markdown("### 📄 Export Medical Summary")
+    
     col1, col2 = st.columns([3, 1])
     
     with col1:
-        st.markdown("**You can copy this summary to share with your healthcare provider**")
+        st.markdown("**Share this professional medical summary with your healthcare provider**")
+        st.caption("The PDF includes complete SOAP note, triage assessment, and medical disclaimers")
     
     with col2:
-        # Future: Add PDF export button here
-        st.button("📄 Export PDF", disabled=True, help="PDF export coming soon!")
+        # Generate PDF button
+        if st.button("📄 Download PDF", type="primary", use_container_width=True):
+            try:
+                from utils.pdf_generator import generate_soap_pdf
+                
+                # Generate PDF
+                pdf_bytes = generate_soap_pdf(
+                    consultation,
+                    patient_name=st.session_state.get('patient_name'),
+                    patient_age=st.session_state.get('patient_age'),
+                    patient_gender=st.session_state.get('patient_gender')
+                )
+                
+                # Create download
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"DermaCheck_SOAP_Summary_{timestamp}.pdf"
+                
+                st.download_button(
+                    label="💾 Save PDF Report",
+                    data=pdf_bytes,
+                    file_name=filename,
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+                
+                st.success("✅ PDF generated successfully! Click 'Save PDF Report' to download.")
+                
+            except Exception as e:
+                st.error(f"❌ Error generating PDF: {str(e)}")
+                st.info("Please ensure all dependencies are installed: pip install fpdf2")
 
 
 if __name__ == "__main__":
