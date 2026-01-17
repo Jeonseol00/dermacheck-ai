@@ -1,11 +1,54 @@
 """
 SOAP Note PDF Generator
 Creates professional medical summary PDFs from SOAP consultation results
+v2.1.1: Fixed emoji encoding for latin-1 font compatibility
 """
 from fpdf import FPDF
 from datetime import datetime
 from typing import Dict, Optional
 import os
+import re
+
+
+def sanitize_for_pdf(text: str) -> str:
+    """
+    Remove emoji and non-latin characters for PDF compatibility
+    
+    Args:
+        text: Input text possibly containing emoji
+        
+    Returns:
+        Cleaned text with only latin-1 compatible characters
+    """
+    if not text:
+        return text
+    
+    # Method 1: Remove emoji using regex pattern
+    # Covers most common emoji ranges
+    emoji_pattern = re.compile(
+        "["
+        "\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+        "\U0001F680-\U0001F6FF"  # transport & map symbols
+        "\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        "\U00002702-\U000027B0"  # dingbats
+        "\U000024C2-\U0001F251"
+        "\U0001F900-\U0001F9FF"  # supplemental symbols
+        "\U0001FA00-\U0001FA6F"  # extended symbols
+        "]+",
+        flags=re.UNICODE
+    )
+    
+    text = emoji_pattern.sub('', text)
+    
+    # Method 2: Encode to latin-1 and ignore errors
+    # This catches any remaining non-latin characters
+    try:
+        text = text.encode('latin-1', 'ignore').decode('latin-1')
+    except:
+        pass
+    
+    return text.strip()
 
 
 class SOAPReportGenerator(FPDF):
@@ -19,10 +62,10 @@ class SOAPReportGenerator(FPDF):
         
     def header(self):
         """Custom header with DermaCheck branding"""
-        # Logo/Title
+        # Logo/Title - NO EMOJI
         self.set_font('Arial', 'B', 20)
         self.set_text_color(20, 184, 166)  # Medical Teal
-        self.cell(0, 10, '🩺 DermaCheck AI', 0, 1, 'C')
+        self.cell(0, 10, 'DermaCheck AI', 0, 1, 'C')
         
         # Subtitle
         self.set_font('Arial', 'I', 10)
@@ -147,10 +190,10 @@ def generate_soap_pdf(
     
     # Patient Information Section
     if patient_name or patient_age or patient_gender:
-        pdf.add_section_title('📋 Patient Information', 59, 130, 246)
+        pdf.add_section_title('Patient Information', 59, 130, 246)
         
         if patient_name:
-            pdf.add_info_box('Patient Name', patient_name)
+            pdf.add_info_box('Patient Name', sanitize_for_pdf(patient_name))
         if patient_age:
             pdf.add_info_box('Age', f'{patient_age} years')
         if patient_gender and patient_gender != "Select...":
