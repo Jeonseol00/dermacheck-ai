@@ -22,12 +22,20 @@ class SymptomAnalyzer:
         
         genai.configure(api_key=Config.GOOGLE_API_KEY)
         
-        # Use Med-Gemma or Gemini Pro for medical text generation
+        # Use latest Gemini model for medical text generation
+        # Updated v2.0.3: gemini-pro deprecated → gemini-1.5-flash
         try:
-            self.model = genai.GenerativeModel('gemini-pro')
+            # Primary: Gemini 1.5 Flash (fast, cost-effective, latest stable)
+            self.model = genai.GenerativeModel('gemini-1.5-flash')
         except Exception as e:
-            print(f"Warning: Could not load Med-Gemma, using fallback: {e}")
-            self.model = genai.GenerativeModel('gemini-pro')
+            print(f"Warning: Could not load gemini-1.5-flash, trying fallback: {e}")
+            try:
+                # Fallback 1: Gemini 1.5 Pro (more powerful)
+                self.model = genai.GenerativeModel('gemini-1.5-pro')
+            except Exception as e2:
+                print(f"Warning: Could not load gemini-1.5-pro: {e2}")
+                # Fallback 2: Basic gemini (last resort)
+                self.model = genai.GenerativeModel('gemini-pro')
         
         # Configure for medical documentation
         self.generation_config = {
