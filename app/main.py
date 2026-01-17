@@ -10,6 +10,7 @@ from datetime import datetime
 # Import custom modules
 from models.abcde_analyzer import ABCDEAnalyzer
 from models.medgemma_client import MedGemmaClient
+from models.symptom_analyzer import SymptomAnalyzer
 from utils.timeline_manager import TimelineManager
 from utils.image_utils import (
     validate_image, preprocess_image, create_comparison_view,
@@ -55,8 +56,17 @@ if 'medgemma_client' not in st.session_state:
         st.session_state.medgemma_client = None
         st.warning(f"⚠️ Med-Gemma unavailable: {e}. Please configure GOOGLE_API_KEY in .env file.")
 
+if 'symptom_analyzer' not in st.session_state:
+    try:
+        st.session_state.symptom_analyzer = SymptomAnalyzer()
+    except ValueError as e:
+        st.session_state.symptom_analyzer = None
+
 if 'current_analysis' not in st.session_state:
     st.session_state.current_analysis = None
+
+if 'current_consultation' not in st.session_state:
+    st.session_state.current_consultation = None
 
 
 def main():
@@ -74,7 +84,7 @@ def main():
         st.markdown("### Navigation")
         page = st.radio(
             "Select Feature",
-            ["🏠 New Analysis", "📊 Timeline Tracking", "📚 Education", "ℹ️ About"],
+            ["🏠 New Analysis", "💬 General Consultation", "📊 Timeline Tracking", "📚 Education", "ℹ️ About"],
             label_visibility="collapsed"
         )
         
@@ -100,6 +110,8 @@ def main():
     # Route to selected page
     if "New Analysis" in page:
         page_new_analysis()
+    elif "General Consultation" in page:
+        page_general_consultation()
     elif "Timeline" in page:
         page_timeline_tracking()
     elif "Education" in page:
@@ -531,3 +543,201 @@ def page_about():
 
 if __name__ == "__main__":
     main()
+
+
+def page_general_consultation():
+    """General symptom consultation page - Module B"""
+    st.markdown("## 💬 General Health Consultation")
+    
+    st.markdown("""
+    **Pre-Consultation Assistant** - Describe your symptoms in your own words.  
+    Our AI will help organize your information for your doctor.
+    """)
+    
+    if not st.session_state.symptom_analyzer:
+        st.error("⚠️ Symptom analyzer unavailable. Please configure GOOGLE_API_KEY.")
+        return
+    
+    # Input section
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.markdown("### Describe Your Symptoms")
+        
+        symptoms_input = st.text_area(
+            "Tell us what you're experiencing",
+            placeholder="Example: I've had a fever for 3 days, and there's a red rash on my left arm that itches. I also feel dizzy sometimes.",
+            height=150,
+            help="Describe your symptoms in your own words. Include when they started, where they are, and how severe."
+        )
+        
+        # Optional patient context
+        with st.expander("📋 Additional Information (Optional)"):
+            col_a, col_b = st.columns(2)
+            with col_a:
+                age = st.number_input("Age", min_value=0, max_value=120, value=None, step=1)
+                gender = st.selectbox("Gender", ["Select...", "Male", "Female", "Other", "Prefer not to say"])
+            with col_b:
+                medical_history = st.text_input(
+                    "Existing conditions",
+                    placeholder="Diabetes, hypertension, etc."
+                )
+        
+        # Analyze button
+        if st.button("📝 Generate Medical Summary", type="primary", use_container_width=True):
+            if symptoms_input.strip():
+                with st.spinner("Analyzing symptoms and generating SOAP note... This may take a moment."):
+                    patient_context = {}
+                    if age:
+                        patient_context['age'] = age
+                    if gender and gender != "Select...":
+                        patient_context['gender'] = gender
+                    if medical_history:
+                        patient_context['medical_history'] = medical_history
+                    
+                    # Analyze symptoms
+                    result = st.session_state.symptom_analyzer.analyze_symptoms(
+                        symptoms_input,
+                        patient_context if patient_context else None
+                    )
+                    
+                    st.session_state.current_consultation = result
+            else:
+                st.warning("⚠️ Please describe your symptoms first.")
+    
+    with col2:
+        st.markdown("### 💡 Tips")
+        st.markdown("""
+        **Include:**
+        - What symptoms you have
+        - When they started
+        - Where on your body
+        - How severe (mild/moderate/severe)
+        - What makes it better/worse
+        
+        **Examples:**
+        - "Headache for 2 days, behind eyes, worse with light"
+        - "Stomach pain since yesterday, sharp, after eating"
+        - "Rash on both legs, itchy, started 1 week ago"
+        """)
+    
+    # Display results if available
+    if st.session_state.current_consultation:
+        display_consultation_results(st.session_state.current_consultation)
+
+
+def display_consultation_results(consultation):
+    """Display SOAP note and consultation results"""
+    
+    if consultation['status'] == 'error':
+        st.error(f"❌ Error generating analysis: {consultation['raw_response']}")
+        return
+    
+    st.markdown("---")
+    st.markdown("## 📋 Medical Summary (SOAP Note)")
+    
+    st.info("""
+    **For Healthcare Providers:** This AI-generated summary can help streamline your consultation.  
+    **For Patients:** You can share this with your doctor to help explain your symptoms clearly.
+    """)
+    
+    # Triage Level
+    triage = consultation['triage']
+    triage_colors = {
+        'URGENT': 'red',
+        'SEMI-URGENT': 'orange',
+        'ROUTINE': 'yellow',
+        'NON-URGENT': 'green'
+    }
+    
+    triage_emojis = {
+        'URGENT': '🚨',
+        'SEMI-URGENT': '⚠️',
+        'ROUTINE': '📅',
+        'NON-URGENT': '✅'
+    }
+    
+    triage_color = triage_colors.get(triage['level'], 'gray')
+    triage_emoji = triage_emojis.get(triage['level'], '📋')
+    
+    st.markdown(
+        f"""
+        <div class='risk-card' style='border-left-color: {triage_color}; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))'>
+            <h2>{triage_emoji} {triage['level']} Priority</h2>
+            <p style='font-size: 1.1rem; margin: 0.5rem 0;'><strong>Recommendation:</strong> {triage['recommendation']}</p>
+            <p style='font-size: 0.95rem; color: #94A3B8; margin: 0;'>{triage['reasoning']}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # SOAP Note Sections
+    soap = consultation['soap_note']
+    
+    # Subjective
+    with st.expander("**S - SUBJECTIVE** (Patient's Description)", expanded=True):
+        st.markdown(soap.get('subjective', 'No subjective data available'))
+    
+    # Objective
+    with st.expander("**O - OBJECTIVE** (Physical Exam Findings)"):
+        st.markdown(soap.get('objective', 'No objective data available'))
+    
+    # Assessment
+    with st.expander("**A - ASSESSMENT** (Clinical Impression)", expanded=True):
+        st.markdown(soap.get('assessment', 'No assessment available'))
+    
+    # Plan
+    with st.expander("**P - PLAN** (Recommended Next Steps)", expanded=True):
+        st.markdown(soap.get('plan', 'No plan available'))
+    
+    # Medical Entities Summary
+    entities = consultation['medical_entities']
+    
+    if entities['symptoms'] or entities['duration'] or entities['red_flags']:
+        st.markdown("---")
+        st.markdown("### 🔍 Detected Key Information")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if entities['symptoms']:
+                st.markdown("**Symptoms Mentioned:**")
+                for symptom in entities['symptoms']:
+                    st.markdown(f"- {symptom.title()}")
+        
+        with col2:
+            if entities['duration']:
+                st.markdown("**Duration:**")
+                st.markdown(f"- {entities['duration']}")
+        
+        with col3:
+            if entities['red_flags']:
+                st.markdown("**⚠️ Red Flags:**")
+                for flag in entities['red_flags']:
+                    st.markdown(f"- {flag.title()}")
+    
+    # Disclaimer
+    st.markdown("---")
+    st.warning("""
+    **⚠️ IMPORTANT MEDICAL DISCLAIMER:**
+    
+    This AI-generated summary is for **informational and organizational purposes only**.  
+    It is **NOT** a medical diagnosis or treatment recommendation.
+    
+    - Always consult a qualified healthcare professional for medical advice
+    - Do not delay seeking medical care based on this summary
+    - If you have urgent symptoms, seek immediate medical attention
+    - This tool is designed to help communicate with your doctor, not replace them
+    """)
+    
+    # Export option
+    st.markdown("---")
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        st.markdown("**You can copy this summary to share with your healthcare provider**")
+    
+    with col2:
+        # Future: Add PDF export button here
+        st.button("📄 Export PDF", disabled=True, help="PDF export coming soon!")
+
