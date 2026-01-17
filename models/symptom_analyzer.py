@@ -22,20 +22,30 @@ class SymptomAnalyzer:
         
         genai.configure(api_key=Config.GOOGLE_API_KEY)
         
-        # Use latest Gemini model for medical text generation
-        # Updated v2.0.3: gemini-pro deprecated → gemini-1.5-flash
+        # Use latest Gemini models (January 2026)
+        # Hierarchy: 2.5 Flash (stable) → 3.0 Flash (experimental) → legacy
         try:
-            # Primary: Gemini 1.5 Flash (fast, cost-effective, latest stable)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            # Primary: Gemini 2.5 Flash (STABLE - June 2025 GA)
+            # Best for production: predictable latency, proven reliability
+            self.model = genai.GenerativeModel('gemini-2.5-flash')
+            print("Using Gemini 2.5 Flash (stable)")
         except Exception as e:
-            print(f"Warning: Could not load gemini-1.5-flash, trying fallback: {e}")
+            print(f"Gemini 2.5 Flash unavailable: {e}, trying 3.0 Flash...")
             try:
-                # Fallback 1: Gemini 1.5 Pro (more powerful)
-                self.model = genai.GenerativeModel('gemini-1.5-pro')
+                # Fallback 1: Gemini 3.0 Flash (LATEST - Dec 2025 preview)
+                # Frontier intelligence, fastest, but newer/experimental
+                self.model = genai.GenerativeModel('gemini-3-flash')
+                print("Using Gemini 3.0 Flash (latest experimental)")
             except Exception as e2:
-                print(f"Warning: Could not load gemini-1.5-pro: {e2}")
-                # Fallback 2: Basic gemini (last resort)
-                self.model = genai.GenerativeModel('gemini-pro')
+                print(f"Gemini 3.0 Flash unavailable: {e2}, trying legacy...")
+                try:
+                    # Fallback 2: Gemini 1.5 Flash (older stable)
+                    self.model = genai.GenerativeModel('gemini-1.5-flash')
+                    print("Using Gemini 1.5 Flash (legacy)")
+                except Exception as e3:
+                    # Last resort: basic gemini
+                    print(f"All modern models unavailable: {e3}, using basic gemini-pro")
+                    self.model = genai.GenerativeModel('gemini-pro')
         
         # Configure for medical documentation
         self.generation_config = {
