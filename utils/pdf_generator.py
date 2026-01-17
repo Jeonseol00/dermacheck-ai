@@ -285,14 +285,20 @@ def generate_soap_pdf(
         0, 'C')
     
     # Return PDF as bytes
-    # fpdf2 v2.x: output(dest='S') already returns bytes, no need to encode
+    # fpdf2 v2.x: output(dest='S') returns bytes or bytearray
+    # Streamlit's download_button requires bytes, not bytearray
     pdf_output = pdf.output(dest='S')
     
-    # Handle both str and bytes return types (fpdf2 version compatibility)
+    # Convert to bytes if needed (handle str, bytes, or bytearray)
     if isinstance(pdf_output, str):
+        # Old fpdf versions return str
         return pdf_output.encode('latin-1')
+    elif isinstance(pdf_output, bytearray):
+        # Some fpdf2 versions return bytearray - convert to bytes
+        return bytes(pdf_output)
     else:
-        return pdf_output  # Already bytes
+        # Already bytes
+        return pdf_output
 
 
 def create_downloadable_soap_pdf(consultation_data: Dict, filename: str = "soap_medical_summary.pdf") -> str:
