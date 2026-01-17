@@ -42,12 +42,13 @@ def validate_image(image_file) -> Tuple[bool, str]:
         if image.size[0] < Config.MIN_IMAGE_SIZE[0] or image.size[1] < Config.MIN_IMAGE_SIZE[1]:
             return False, f"Image too small. Minimum size: {Config.MIN_IMAGE_SIZE}"
         
-        # Check if image is blurry (using Laplacian variance)
-        img_array = np.array(image.convert('L'))
-        laplacian_var = cv2.Laplacian(img_array, cv2.CV_64F).var()
-        
-        if laplacian_var < 100:  # Threshold for blur detection
-            return False, "Image appears too blurry. Please upload a clearer photo."
+        # Blur detection disabled - causes false positives on smooth skin
+        # Modern phone cameras have good autofocus, this check is unnecessary
+        # Original logic kept for reference:
+        # img_array = np.array(image.convert('L'))
+        # laplacian_var = cv2.Laplacian(img_array, cv2.CV_64F).var()
+        # if laplacian_var < 100:
+        #     return False, "Image appears too blurry. Please upload a clearer photo."
         
         return True, "Image valid"
         
