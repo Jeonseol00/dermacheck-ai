@@ -30,9 +30,13 @@ def validate_image(image_file) -> Tuple[bool, str]:
         # Try to open image
         image = Image.open(image_file)
         
-        # Check format
-        if image.format.lower() not in [fmt.upper() for fmt in Config.SUPPORTED_FORMATS]:
-            return False, f"Unsupported format. Please use: {', '.join(Config.SUPPORTED_FORMATS)}"
+        # Check format (case-insensitive)
+        supported_formats = [fmt.lower() for fmt in Config.SUPPORTED_FORMATS]
+        # Also accept common variations
+        supported_formats.extend(['jpeg', 'jpg', 'png'])
+        
+        if image.format and image.format.lower() not in supported_formats:
+            return False, f"Unsupported format. Please use: JPG, JPEG, PNG"
         
         # Check dimensions
         if image.size[0] < Config.MIN_IMAGE_SIZE[0] or image.size[1] < Config.MIN_IMAGE_SIZE[1]:

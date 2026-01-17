@@ -28,10 +28,16 @@ st.set_page_config(
 # Load custom CSS
 def load_css():
     """Load custom CSS styling"""
-    css_path = os.path.join("assets", "css", "styles.css")
+    css_path = os.path.join("assets", "css", "styles_premium.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    else:
+        # Fallback to regular styles if premium not found
+        css_path_fallback = os.path.join("assets", "css", "styles.css")
+        if os.path.exists(css_path_fallback):
+            with open(css_path_fallback) as f:
+                st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 load_css()
 
