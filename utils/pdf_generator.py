@@ -20,6 +20,12 @@ def sanitize_for_pdf(text: str) -> str:
     Returns:
         Cleaned text with only latin-1 compatible characters
     """
+    # SAFETY CHECK: Only process strings, return non-strings as-is
+    # This prevents errors when called on bytearray, None, or other types
+    if not isinstance(text, str):
+        return text
+    
+    # Return empty string as-is
     if not text:
         return text
     
