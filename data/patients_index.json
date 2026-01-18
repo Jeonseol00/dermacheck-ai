@@ -1,0 +1,38 @@
+{
+    "metadata": {
+        "version": "1.0",
+        "created": "2026-01-18",
+        "purpose": "Demo data for Project Sherlock pattern detection",
+        "total_patients": 3,
+        "mode": "synthetic_rigged_data"
+    },
+    "patients": [
+        {
+            "patient_id": "DEMO_001",
+            "file": "patient_001_allergic_rhinitis.json",
+            "scenario": "Seasonal Allergic Rhinitis",
+            "pattern_strength": "0.90",
+            "demo_priority": "high"
+        },
+        {
+            "patient_id": "DEMO_002",
+            "file": "patient_002_migraine.json",
+            "scenario": "Stress-Triggered Migraine",
+            "pattern_strength": "0.85",
+            "demo_priority": "high"
+        },
+        {
+            "patient_id": "DEMO_003",
+            "file": "patient_003_eczema.json",
+            "scenario": "Weather-Correlated Eczema",
+            "pattern_strength": "0.92",
+            "demo_priority": "high"
+        }
+    ],
+    "usage_instructions": {
+        "loading": "Use sherlock_engine.load_patient_history(patient_id)",
+        "demo_mode": "Always display 'DEMO MODE' disclaimer in UI",
+        "pattern_detection": "All 3 patients have clear, detectable patterns",
+        "expected_insights": "Each patient should generate specific correlation insights"
+    }
+}

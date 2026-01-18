@@ -1,0 +1,108 @@
+{
+    "patient_id": "DEMO_003",
+    "scenario_name": "Weather-Correlated Eczema Flare",
+    "description": "Pasien dengan eksim yang kambuh saat cuaca panas kering dan polusi tinggi",
+    "pattern_type": "environmental_trigger",
+    "entries": [
+        {
+            "entry_id": 1,
+            "timestamp": "2025-09-22T11:00:00",
+            "symptoms": [
+                "itchy skin",
+                "red patches on arms",
+                "dry skin",
+                "inflammation"
+            ],
+            "severity": "moderate",
+            "context": {
+                "temperature": "34°C",
+                "humidity": "45%",
+                "air_quality_index": 180,
+                "weather_condition": "hot and dry"
+            },
+            "treatment": "hydrocortisone cream + moisturizer",
+            "outcome": "improved after 5 days"
+        },
+        {
+            "entry_id": 2,
+            "timestamp": "2025-10-15T09:30:00",
+            "symptoms": [
+                "itchy skin",
+                "red patches"
+            ],
+            "severity": "mild",
+            "context": {
+                "temperature": "32°C",
+                "humidity": "50%",
+                "air_quality_index": 150,
+                "weather_condition": "warm and hazy"
+            },
+            "treatment": "moisturizer only",
+            "outcome": "resolved in 3 days"
+        },
+        {
+            "entry_id": 3,
+            "timestamp": "2025-11-20T10:00:00",
+            "symptoms": [
+                "none - skin clear"
+            ],
+            "severity": "none",
+            "context": {
+                "temperature": "26°C",
+                "humidity": "75%",
+                "air_quality_index": 60,
+                "weather_condition": "cool and rainy"
+            },
+            "treatment": "maintenance moisturizer",
+            "outcome": "no flare-up"
+        },
+        {
+            "entry_id": 4,
+            "timestamp": "2026-01-05T12:00:00",
+            "symptoms": [
+                "severe itching",
+                "red inflamed patches",
+                "dry cracked skin",
+                "bleeding spots"
+            ],
+            "severity": "severe",
+            "context": {
+                "temperature": "36°C",
+                "humidity": "40%",
+                "air_quality_index": 200,
+                "weather_condition": "extremely hot and polluted"
+            },
+            "treatment": "hydrocortisone + antihistamine + intensive moisturizer",
+            "outcome": "improved after 7 days"
+        },
+        {
+            "entry_id": 5,
+            "timestamp": "2026-01-18T10:30:00",
+            "symptoms": [
+                "itchy skin",
+                "red patches on arms and legs",
+                "dry skin"
+            ],
+            "severity": "moderate",
+            "context": {
+                "temperature": "35°C",
+                "humidity": "42%",
+                "air_quality_index": 175,
+                "weather_condition": "hot dry and hazy"
+            },
+            "treatment": "currently applying moisturizer (seeking advice)",
+            "outcome": "ongoing"
+        }
+    ],
+    "expected_pattern": {
+        "recurrent_symptoms": [
+            "itchy skin",
+            "red patches",
+            "dry skin"
+        ],
+        "frequency": "4 flare-ups in 4 months",
+        "trigger": "Hot weather (>32°C) + Low humidity (<50%) + High pollution (AQI >150)",
+        "correlation_strength": 0.92,
+        "insight": "Pola sangat jelas: Eksim kambuh saat cuaca panas kering dengan polusi tinggi. Tidak ada flare-up saat cuaca sejuk/lembab. Rekomendasi: hindari paparan polusi, gunakan humidifier, moisturizer intensif saat cuaca panas."
+    }
+}

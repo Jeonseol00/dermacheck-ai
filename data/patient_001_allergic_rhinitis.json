@@ -1,0 +1,110 @@
+{
+    "patient_id": "DEMO_001",
+    "scenario_name": "Seasonal Allergic Rhinitis",
+    "description": "Pasien dengan rhinitis alergi yang kambuh setiap musim semi/gugur (pollen season)",
+    "pattern_type": "seasonal_trigger",
+    "entries": [
+        {
+            "entry_id": 1,
+            "timestamp": "2025-09-15T09:00:00",
+            "symptoms": [
+                "runny nose",
+                "sneezing",
+                "itchy eyes",
+                "nasal congestion"
+            ],
+            "severity": "moderate",
+            "context": {
+                "season": "spring",
+                "pollen_level": "high",
+                "weather": "sunny",
+                "location": "Jakarta"
+            },
+            "treatment": "antihistamine (cetirizine 10mg)",
+            "outcome": "improved after 2 days"
+        },
+        {
+            "entry_id": 2,
+            "timestamp": "2025-10-20T08:30:00",
+            "symptoms": [
+                "sneezing",
+                "itchy eyes",
+                "runny nose"
+            ],
+            "severity": "mild",
+            "context": {
+                "season": "fall",
+                "pollen_level": "moderate",
+                "weather": "windy",
+                "location": "Jakarta"
+            },
+            "treatment": "same medication",
+            "outcome": "resolved in 1 day"
+        },
+        {
+            "entry_id": 3,
+            "timestamp": "2025-12-05T10:00:00",
+            "symptoms": [
+                "headache",
+                "fatigue"
+            ],
+            "severity": "mild",
+            "context": {
+                "season": "winter",
+                "pollen_level": "low",
+                "weather": "rainy",
+                "location": "Jakarta"
+            },
+            "treatment": "rest only",
+            "outcome": "resolved naturally"
+        },
+        {
+            "entry_id": 4,
+            "timestamp": "2026-01-10T09:15:00",
+            "symptoms": [
+                "runny nose",
+                "sneezing",
+                "itchy eyes",
+                "watery eyes"
+            ],
+            "severity": "moderate",
+            "context": {
+                "season": "spring",
+                "pollen_level": "very high",
+                "weather": "sunny and dry",
+                "location": "Jakarta"
+            },
+            "treatment": "antihistamine + nasal spray",
+            "outcome": "improved after 3 days"
+        },
+        {
+            "entry_id": 5,
+            "timestamp": "2026-01-18T08:00:00",
+            "symptoms": [
+                "runny nose",
+                "sneezing",
+                "nasal congestion"
+            ],
+            "severity": "moderate",
+            "context": {
+                "season": "spring",
+                "pollen_level": "high",
+                "weather": "sunny",
+                "location": "Jakarta"
+            },
+            "treatment": "currently untreated (seeking advice)",
+            "outcome": "ongoing"
+        }
+    ],
+    "expected_pattern": {
+        "recurrent_symptoms": [
+            "runny nose",
+            "sneezing",
+            "itchy eyes"
+        ],
+        "frequency": "5 episodes in 4 months",
+        "trigger": "Spring/Fall season (high pollen)",
+        "correlation_strength": 0.9,
+        "insight": "Gejala berulang setiap musim semi/gugur dengan pollen tinggi. Kemungkinan besar rhinitis alergi musiman. Antihistamine efektif untuk kontrol gejala."
+    }
+}

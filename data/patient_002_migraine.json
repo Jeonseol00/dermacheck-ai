@@ -1,0 +1,109 @@
+{
+    "patient_id": "DEMO_002",
+    "scenario_name": "Stress-Triggered Migraine",
+    "description": "Pasien dengan migrain yang dipicu oleh stress tinggi dan kurang tidur",
+    "pattern_type": "stress_trigger",
+    "entries": [
+        {
+            "entry_id": 1,
+            "timestamp": "2025-10-05T14:00:00",
+            "symptoms": [
+                "severe headache",
+                "nausea",
+                "sensitivity to light",
+                "throbbing pain"
+            ],
+            "severity": "severe",
+            "context": {
+                "stress_level": "very high",
+                "sleep_hours": 4,
+                "work_pressure": "deadline week",
+                "caffeine_intake": "3 cups coffee"
+            },
+            "treatment": "ibuprofen 400mg + rest in dark room",
+            "outcome": "improved after 6 hours"
+        },
+        {
+            "entry_id": 2,
+            "timestamp": "2025-11-12T16:30:00",
+            "symptoms": [
+                "headache",
+                "nausea",
+                "sensitivity to light"
+            ],
+            "severity": "moderate",
+            "context": {
+                "stress_level": "high",
+                "sleep_hours": 5,
+                "work_pressure": "presentation day",
+                "caffeine_intake": "2 cups coffee"
+            },
+            "treatment": "paracetamol + rest",
+            "outcome": "improved after 4 hours"
+        },
+        {
+            "entry_id": 3,
+            "timestamp": "2025-12-20T10:00:00",
+            "symptoms": [
+                "mild headache"
+            ],
+            "severity": "mild",
+            "context": {
+                "stress_level": "low",
+                "sleep_hours": 8,
+                "work_pressure": "holiday break",
+                "caffeine_intake": "1 cup coffee"
+            },
+            "treatment": "no medication needed",
+            "outcome": "resolved naturally"
+        },
+        {
+            "entry_id": 4,
+            "timestamp": "2026-01-08T15:00:00",
+            "symptoms": [
+                "severe headache",
+                "nausea",
+                "visual disturbance",
+                "throbbing pain"
+            ],
+            "severity": "severe",
+            "context": {
+                "stress_level": "very high",
+                "sleep_hours": 3,
+                "work_pressure": "project launch",
+                "caffeine_intake": "4 cups coffee"
+            },
+            "treatment": "ibuprofen 600mg + dark room rest",
+            "outcome": "improved after 8 hours"
+        },
+        {
+            "entry_id": 5,
+            "timestamp": "2026-01-18T13:00:00",
+            "symptoms": [
+                "headache",
+                "nausea",
+                "sensitivity to light"
+            ],
+            "severity": "moderate-severe",
+            "context": {
+                "stress_level": "high",
+                "sleep_hours": 4,
+                "work_pressure": "evaluation week",
+                "caffeine_intake": "3 cups coffee"
+            },
+            "treatment": "currently seeking advice",
+            "outcome": "ongoing"
+        }
+    ],
+    "expected_pattern": {
+        "recurrent_symptoms": [
+            "headache",
+            "nausea",
+            "sensitivity to light"
+        ],
+        "frequency": "5 episodes in 3.5 months",
+        "trigger": "High stress + insufficient sleep (<5 hours)",
+        "correlation_strength": 0.85,
+        "insight": "Pola jelas: Migrain muncul saat stress tinggi dan kurang tidur. Tidak ada serangan saat stress rendah. Rekomendasi: manajemen stress, sleep hygiene, dan batasi kafein."
+    }
+}
