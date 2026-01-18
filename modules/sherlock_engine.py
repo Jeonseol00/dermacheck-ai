@@ -1,6 +1,7 @@
 """
 Sherlock Engine - Project Sherlock Core Module
 Pattern detection and historical analysis for medical symptoms
+v1.1: Kaggle environment compatibility improvements
 """
 from typing import Dict, List, Optional, Tuple
 import json
@@ -26,13 +27,32 @@ class SherlockEngine:
     - Treatment effectiveness
     """
     
-    def __init__(self, data_dir: str = "data"):
+    def __init__(self, data_dir: str = None):
         """
         Initialize Sherlock Engine
         
         Args:
             data_dir: Directory containing patient history JSON files
+                     If None, auto-detects based on current file location
         """
+        # Auto-detect data directory if not provided
+        if data_dir is None:
+            # Try multiple possible locations
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            possible_paths = [
+                os.path.join(base_dir, "data"),  # Standard location
+                "data",  # Relative to working directory
+                "/kaggle/working/dermacheck-ai/data",  # Kaggle specific
+            ]
+            
+            for path in possible_paths:
+                if os.path.exists(path) and os.path.isdir(path):
+                    data_dir = path
+                    break
+            
+            if data_dir is None:
+                data_dir = "data"  # Fall back to relative
+        
         self.data_dir = data_dir
         self.api_rotator = get_rotator()
         

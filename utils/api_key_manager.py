@@ -9,16 +9,28 @@ import time
 
 
 def load_env_file(env_path=".env"):
-    """Simple .env file loader (standalone, no dependencies)"""
+    """
+    Simple .env file loader (standalone, no dependencies)
+    Only loads if file exists and env vars not already set
+    """
     if not os.path.exists(env_path):
-        return
+        # Try alternative path (Kaggle might have different structure)
+        alt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', env_path)
+        if os.path.exists(alt_path):
+            env_path = alt_path
+        else:
+            return  # No .env file found, rely on system env vars
     
     with open(env_path, 'r') as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith('#') and '=' in line:
                 key, value = line.split('=', 1)
-                os.environ[key.strip()] = value.strip()
+                key = key.strip()
+                value = value.strip()
+                # Only set if not already in environment
+                if key not in os.environ:
+                    os.environ[key] = value
 
 
 class APIKeyRotator:
@@ -26,18 +38,24 @@ class APIKeyRotator:
     Round-robin API key rotation with failure tracking and cooldown management
     
     Features:
-    - Automatic rotation across 7 API keys
+    - Automatic rotation across multiple API keys
     - Failure tracking per key
     - Cooldown period for rate-limited keys
     - Usage statistics
+    - Kaggle/Cloud environment compatible
     """
     
     def __init__(self):
         """Initialize API key rotator with keys from environment"""
-        # Load .env file
-        load_env_file()
+        # Try to load .env file (but don't fail if not found)
+        # This is optional - Kaggle uses system environment variables
+        try:
+            load_env_file()
+        except Exception as e:
+            print(f"⚠️ .env file not loaded (using system env vars): {e}")
         
-        # Load all Sherlock API keys
+        # Load all Sherlock API keys from environment
+        # Priority: os.environ (system/Kaggle) > .env file
         self.keys: List[str] = []
         for i in range(1, 8):  # 7 keys total
             key = os.getenv(f'SHERLOCK_API_KEY_{i}')
