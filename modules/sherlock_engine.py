@@ -251,10 +251,10 @@ class SherlockEngine:
 {chr(10).join(history_summary)}
 
 **ANALISIS OTOMATIS:**
-- Gejala berulang: {', '.join(recurrence['recurrent_sym tokens'].keys()) if recurrence['recurrent_symptoms'] else 'Tidak ada'}
-- Total episode: {temporal['total_episodes']}
-- Interval rata-rata: {temporal['average_interval_days']} hari
-- Pola musiman: {'Ya' if temporal['suggests_seasonal'] else 'Tidak'}
+- Gejala berulang: {', '.join(recurrence.get('recurrent_symptoms', {}).keys()) if recurrence.get('recurrent_symptoms') else 'Tidak ada'}
+- Total episode: {temporal.get('total_episodes', 0)}
+- Interval rata-rata: {temporal.get('average_interval_days', 0)} hari
+- Pola musiman: {'Ya' if temporal.get('suggests_seasonal', False) else 'Tidak'}
 
 **KONTEKS SAAT FLARE-UP:**
 {json.dumps(contexts, indent=2) if contexts else 'Tidak ada data konteks'}
@@ -355,12 +355,12 @@ Berikan insight sekarang:"""
         return {
             "status": "success",
             "patient_id": patient_id,
-            "scenario": patient_data.get('scenario_name'),
+            "scenario": patient_data.get('scenario_name', 'Unknown'),
             "insight": insight,
             "pattern_stats": {
-                "recurrent_symptoms": list(recurrence['recurrent_symptoms'].keys()),
-                "total_episodes": temporal['total_episodes'],
-                "avg_interval_days": temporal['average_interval_days']
+                "recurrent_symptoms": list(recurrence.get('recurrent_symptoms', {}).keys()),
+                "total_episodes": temporal.get('total_episodes', 0),
+                "avg_interval_days": temporal.get('average_interval_days', 0)
             },
             "demo_mode": True,
             "timestamp": datetime.now().isoformat()
