@@ -567,6 +567,35 @@ def page_general_consultation():
             help="Describe your symptoms in your own words. Include when they started, where they are, and how severe."
         )
         
+        # Sherlock Detective Mode (Project Sherlock)
+        st.markdown("---")
+        sherlock_enabled = st.checkbox(
+            "🔍 Enable Detective Mode (Pattern Analysis)",
+            value=False,
+            help="Analyze your symptom history for recurring patterns and triggers (Demo Mode)"
+        )
+        
+        sherlock_patient = None
+        if sherlock_enabled:
+            st.info("""
+            🎭 **DEMO MODE ACTIVE**  
+            This demonstration uses synthetic patient history to showcase pattern detection capabilities.
+           In production, this would use real (anonymized) patient data with explicit consent.
+            """)
+            
+            # Patient selector for demo
+            sherlock_patient = st.selectbox(
+                "Select Demo Patient Scenario",
+                [
+                    "DEMO_001 - Seasonal Allergic Rhinitis",
+                    "DEMO_002 - Stress-Triggered Migraine",
+                    "DEMO_003 - Weather-Correlated Eczema"
+                ],
+                help="Choose a synthetic patient with historical pattern"
+            )
+        
+        st.markdown("---")
+        
         # Optional patient context
         with st.expander("📋 Additional Information (Optional)"):
             col_a, col_b = st.columns(2)
@@ -603,6 +632,31 @@ def page_general_consultation():
                     )
                     
                     st.session_state.current_consultation = result
+                    
+                    # Project Sherlock: Generate pattern insights if enabled
+                    if sherlock_enabled and sherlock_patient:
+                        st.session_state.sherlock_enabled = True
+                        # Extract patient ID from selection
+                        patient_id = sherlock_patient.split(" - ")[0]  # e.g., "DEMO_001"
+                        st.session_state.sherlock_patient_id = patient_id
+                        
+                        with st.spinner("🔍 Detective analyzing historical patterns..."):
+                            try:
+                                from modules.sherlock_engine import SherlockEngine
+                                sherlock = SherlockEngine()
+                                sherlock_result = sherlock.generate_sherlock_insight(
+                                    patient_id=patient_id,
+                                    current_symptoms=symptoms_input
+                                )
+                                st.session_state.sherlock_result = sherlock_result
+                            except Exception as e:
+                                st.session_state.sherlock_result = {
+                                    "status": "error",
+                                    "message": f"Sherlock Engine error: {str(e)}"
+                                }
+                    else:
+                        st.session_state.sherlock_enabled = False
+                        st.session_state.sherlock_result = None
             else:
                 st.warning("⚠️ Please describe your symptoms first.")
     
@@ -634,7 +688,65 @@ def display_consultation_results(consultation):
         st.error(f"❌ Error generating analysis: {consultation['raw_response']}")
         return
     
+    
     st.markdown("---")
+    
+    # Project Sherlock: Display Detective Insight FIRST (if enabled)
+    if st.session_state.get('sherlock_enabled') and st.session_state.get('sherlock_result'):
+        sherlock_result = st.session_state.sherlock_result
+        
+        st.markdown("## 🔍 AI Detective Insight")
+        
+        if sherlock_result['status'] == 'success':
+            # Success - show pattern insights
+            st.success(f"**Pattern Analysis for: {sherlock_result['scenario']}**")
+            
+            # Insight from Gemini
+            with st.container():
+                st.markdown("### 💡 Pattern Detection Results")
+                st.markdown(sherlock_result['insight'])
+            
+            # Pattern Statistics
+            stats = sherlock_result.get('pattern_stats', {})
+            if stats:
+                st.markdown("---")
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.metric(
+                        "Recurrent Symptoms",
+                        len(stats.get('recurrent_symptoms', [])),
+                        help="Symptoms appearing 3+ times"
+                    )
+                
+                with col2:
+                    st.metric(
+                        "Total Episodes",
+                        stats.get('total_episodes', 0),
+                        help="Number of recorded episodes"
+                    )
+                
+                with col3:
+                    avg_days = stats.get('avg_interval_days', 0)
+                    st.metric(
+                        "Avg Interval",
+                        f"{avg_days:.0f} days",
+                        help="Average time between episodes"
+                    )
+                
+                # List recurrent symptoms
+                if stats.get('recurrent_symptoms'):
+                    st.markdown("**Frequently Recurring:**")
+                    for symptom in stats['recurrent_symptoms']:
+                        st.markdown(f"- {symptom}")
+        
+        else:
+            # Error
+            st.error(f"❌ {sherlock_result.get('message', 'Unknown error')}")
+        
+        st.markdown("---")
+    
+    # Original SOAP Note Display
     st.markdown("## 📋 Medical Summary (SOAP Note)")
     
     st.info("""
