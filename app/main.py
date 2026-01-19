@@ -236,23 +236,6 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Callback functions for mutual exclusivity
-    def reset_resources():
-        """Called when Analysis Tools radio is clicked - clears Resources selection"""
-        st.session_state.current_section = 'analysis'
-        st.session_state.resource_index = None
-        # CRITICAL: Delete widget key from session state (overrides index param!)
-        if "resource_radio" in st.session_state:
-            del st.session_state["resource_radio"]
-    
-    def reset_analysis():
-        """Called when Resources radio is clicked - clears Analysis Tools selection"""
-        st.session_state.current_section = 'resources'
-        st.session_state.analysis_index = None
-        # CRITICAL: Delete widget key from session state (overrides index param!)
-        if "analysis_radio" in st.session_state:
-            del st.session_state["analysis_radio"]
-    
     # Professional Sidebar avec Branding
     with st.sidebar:
         st.markdown("### ⚕️ DermaCheck AI")
@@ -260,46 +243,40 @@ def main():
         st.markdown("---")
         
         st.markdown("#### 📊 Analysis Tools")
-    
-    # Initialize session state for mutual exclusivity
-    if 'current_section' not in st.session_state:
-        st.session_state.current_section = 'analysis'  # Default to analysis tools
-    if 'analysis_index' not in st.session_state:
-        st.session_state.analysis_index = 1  # Default to General Consultation
-    if 'resource_index' not in st.session_state:
-        st.session_state.resource_index = None  # No selection by default
-    
-    # Analysis Tools Radio - with callback to reset Resources
-    page = st.sidebar.radio(
-        "Navigate",
-        [
-            "🏠 New Analysis",
-            "💬 General Consultation", 
-            "📈 Timeline Tracking"
-        ],
-        index=st.session_state.analysis_index if st.session_state.current_section == 'analysis' else None,
-        label_visibility="collapsed",
-        key="analysis_radio",
-        on_change=reset_resources  # Reset Resources when clicked
-    )
-    
-    # Resources section  
-    with st.sidebar:
+        
+        # Analysis Tools Radio - SIMPLIFIED: No index, no callbacks!
+        page = st.radio(
+            "Navigate",
+            [
+                "🏠 New Analysis",
+                "💬 General Consultation", 
+                "📈 Timeline Tracking"
+            ],
+            key="analysis_nav",
+            label_visibility="collapsed"
+        )
+        
         st.markdown("---")
         st.markdown("#### 📚 Resources")
+        
+        # Resources Radio - SIMPLIFIED: No index, no callbacks!
+        resource_page = st.radio(
+            "Resources",
+            [
+                "🎓 Education",
+                "ℹ️ About"
+            ],
+            key="resource_nav",
+            label_visibility="collapsed"
+        )
     
-    # Resources Radio - with callback to reset Analysis Tools    
-    resource_page = st.sidebar.radio(
-        "Resources",
-        [
-            "🎓 Education",
-            "ℹ️ About"
-        ],
-        index=st.session_state.resource_index if st.session_state.current_section == 'resources' else None,
-        label_visibility="collapsed",
-        key="resource_radio",
-        on_change=reset_analysis  # Reset Analysis Tools when clicked
-    )
+    # Update selected page based on which radio changed
+    # Streamlit radios are mutually exclusive within the same context (sidebar here).
+    # The last radio interacted with will set the session state.
+    if page:
+        st.session_state.selected_page = page
+    if resource_page:
+        st.session_state.selected_page = resource_page
     
     # Summary stats in sidebar
     with st.sidebar:
@@ -319,41 +296,23 @@ def main():
                     st.markdown(f"🟢 {stats['risk_distribution']['low']}")
         st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
-    # Route to pages - Fixed: Use session_state instead of widget return values
-    # Widget values can be None after deletion, causing blank page!
     
-    # Render based on current_section state (more reliable than widget values)
-    if st.session_state.current_section == 'resources':
-        # Resources section is active
-        # Update index if resource_page has value
-        if resource_page and resource_page in ["🎓 Education", "ℹ️ About"]:
-            st.session_state.resource_index = ["🎓 Education", "ℹ️ About"].index(resource_page)
-        
-        # Render based on stored index
-        if st.session_state.resource_index == 0:
-            page_education()
-        elif st.session_state.resource_index == 1:
-            page_about()
-        else:
-            # Fallback to About if index not set
-            page_about()
+    # Route to pages - SIMPLIFIED: Single source of truth
+    selected = st.session_state.selected_page
     
-    else:  # current_section == 'analysis' (default)
-        # Analysis Tools section is active
-        # Update index if page has value
-        if page and page in ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]:
-            st.session_state.analysis_index = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"].index(page)
-        
-        # Render based on stored index
-        if st.session_state.analysis_index == 0:
-            page_new_analysis()
-        elif st.session_state.analysis_index == 1:
-            page_general_consultation()
-        elif st.session_state.analysis_index == 2:
-            page_timeline_tracking()
-        else:
-            # Fallback to General Consultation if index not set
-            page_general_consultation()
+    if selected == "🏠 New Analysis":
+        page_new_analysis()
+    elif selected == "💬 General Consultation":
+        page_general_consultation()
+    elif selected == "📈 Timeline Tracking":
+        page_timeline_tracking()
+    elif selected == "🎓 Education":
+        page_education()
+    elif selected == "ℹ️ About":
+        page_about()
+    else:
+        # Fallback
+        page_general_consultation()
     
     # Footer disclaimer
     st.markdown("---")
