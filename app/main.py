@@ -244,14 +244,31 @@ def main():
         
         st.markdown("#### 📊 Analysis Tools")
         
-        # Analysis Tools Radio - SIMPLIFIED: No index, no callbacks!
+        # Initialize selected_page if not exists
+        if 'selected_page' not in st.session_state:
+            st.session_state.selected_page = "💬 General Consultation"
+        
+        # Define radio options
+        analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
+        resource_options = ["🎓 Education", "ℹ️ About"]
+        
+        # Determine which radio should show selection (index control for visual mutual exclusivity)
+        if st.session_state.selected_page in analysis_options:
+            analysis_index = analysis_options.index(st.session_state.selected_page)
+            resource_index = None  # No selection in Resources
+        elif st.session_state.selected_page in resource_options:
+            analysis_index = None  # No selection in Analysis Tools
+            resource_index = resource_options.index(st.session_state.selected_page)
+        else:
+            # Fallback
+            analysis_index = 1  # Default to General Consultation
+            resource_index = None
+        
+        # Analysis Tools Radio - with index control
         page = st.radio(
             "Navigate",
-            [
-                "🏠 New Analysis",
-                "💬 General Consultation", 
-                "📈 Timeline Tracking"
-            ],
+            analysis_options,
+            index=analysis_index,
             key="analysis_nav",
             label_visibility="collapsed"
         )
@@ -259,36 +276,20 @@ def main():
         st.markdown("---")
         st.markdown("#### 📚 Resources")
         
-        # Resources Radio - SIMPLIFIED: No index, no callbacks!
+        # Resources Radio - with index control
         resource_page = st.radio(
             "Resources",
-            [
-                "🎓 Education",
-                "ℹ️ About"
-            ],
+            resource_options,
+            index=resource_index,
             key="resource_nav",
             label_visibility="collapsed"
         )
     
-    # Initialize selected_page if not exists
-    if 'selected_page' not in st.session_state:
-        st.session_state.selected_page = "💬 General Consultation"
-    
-    # Track previous values to detect which radio changed
-    if 'prev_analysis' not in st.session_state:
-        st.session_state.prev_analysis = page
-    if 'prev_resource' not in st.session_state:
-        st.session_state.prev_resource = resource_page
-    
-    # Detect which radio button actually changed
-    if page != st.session_state.prev_analysis:
-        # Analysis Tools radio changed
+    # Detect which radio was actually clicked (value is not None when clicked)
+    if page is not None:
         st.session_state.selected_page = page
-        st.session_state.prev_analysis = page
-    elif resource_page != st.session_state.prev_resource:
-        # Resources radio changed
+    if resource_page is not None:
         st.session_state.selected_page = resource_page
-        st.session_state.prev_resource = resource_page
     
     # Summary stats in sidebar
     with st.sidebar:
