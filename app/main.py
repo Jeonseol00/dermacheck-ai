@@ -289,17 +289,28 @@ def main():
                 with col3:
                     st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
-    # Route to pages based on selection
-    if page == "🏠 New Analysis":
-        page_new_analysis()
-    elif page == "💬 General Consultation":
-        page_general_consultation()
-    elif page == "📈 Timeline Tracking":
-        page_timeline_tracking()
-    elif resource_page == "🎓 Education":
-        page_education()
-    elif resource_page == "ℹ️ About":
-        page_about()
+    # Route to pages - Fixed: Proper handling of dual radio groups
+    # Check which section was last interacted with
+    
+    # Initialize session state for page tracking if not exists
+    if 'active_section' not in st.session_state:
+        st.session_state.active_section = 'analysis'
+    
+    # Detect which radio changed (simple approach: check if resource_page is selected)
+    if resource_page in ["🎓 Education", "ℹ️ About"]:
+        # Resources section is active
+        if resource_page == "🎓 Education":
+            page_education()
+        elif resource_page == "ℹ️ About":
+            page_about()
+    else:
+        # Analysis Tools section is active (default)
+        if page == "🏠 New Analysis":
+            page_new_analysis()
+        elif page == "💬 General Consultation":
+            page_general_consultation()
+        elif page == "📈 Timeline Tracking":
+            page_timeline_tracking()
     
     # Footer disclaimer
     st.markdown("---")
