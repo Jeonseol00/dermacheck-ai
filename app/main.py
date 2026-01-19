@@ -272,7 +272,12 @@ def main():
             if stats['total_lesions'] > 0:
                 st.markdown("**Risk Distribution:**")
                 col1, col2, col3 = st.columns(3)
-        st.markdown(f"🔴 {stats['risk_distribution']['high']}")
+                with col1:
+                    st.markdown(f"🟢 {stats['risk_distribution']['low']}")
+                with col2:
+                    st.markdown(f"🟡 {stats['risk_distribution']['medium']}")
+                with col3:
+                    st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
     
     # Route to pages - Simple & clean! (5 pages only)
