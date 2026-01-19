@@ -235,79 +235,27 @@ def main():
         "<p class='subtitle'>AI-Powered Skin Health Screening & Lesion Tracking</p>",
         unsafe_allow_html=True
     )
-    # SIMPLE APPROACH: Single Radio - Works WITH Streamlit! 🎯
+    # ✅ SINGLE RADIO SOLUTION - Simple & Bulletproof! 🎯
     with st.sidebar:
         st.markdown("### ⚕️ DermaCheck AI")
         st.caption("v3.0 - Pattern Detection Engine")
         st.markdown("---")
         
-        # Section: Analysis Tools
-        st.markdown("#### 📊 Analysis Tools")
-        
-        # Initialize current page if not exists (BEFORE radios!)
-        if 'current_page' not in st.session_state:
-            st.session_state.current_page = "💬 General Consultation"
-        
-        # Define options
-        analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
-        resource_options = ["🎓 Education", "ℹ️ About"]
-        
-        # Calculate index based on current_page (ONLY calculate, NO deletion here!)
-        if st.session_state.current_page in analysis_options:
-            # Current page in Analysis Tools
-            analysis_index = analysis_options.index(st.session_state.current_page)
-            resource_index = None
-        elif st.session_state.current_page in resource_options:
-            # Current page in Resources
-            analysis_index = None
-            resource_index = resource_options.index(st.session_state.current_page)
-        else:
-            # Fallback
-            analysis_index = 1
-            resource_index = None
-        
-        # Callbacks: Update page AND delete other widget key (runs BEFORE render!)
-        def on_analysis_change():
-            """User clicked Analysis radio - update page AND clear Resources"""
-            # Safety check: only update if key exists
-            if 'nav_analysis' in st.session_state:
-                st.session_state.current_page = st.session_state.nav_analysis
-                # CRITICAL: Delete Resources key BEFORE next render!
-                if 'nav_resources' in st.session_state:
-                    del st.session_state['nav_resources']
-        
-        def on_resources_change():
-            """User clicked Resources radio - update page AND clear Analysis"""
-            # Safety check: only update if key exists
-            if 'nav_resources' in st.session_state:
-                st.session_state.current_page = st.session_state.nav_resources
-                # CRITICAL: Delete Analysis key BEFORE next render!
-                if 'nav_analysis' in st.session_state:
-                    del st.session_state['nav_analysis']
-        
-        page_analysis = st.radio(
-            "Analysis",
-            analysis_options,
-            index=analysis_index,
-            label_visibility="collapsed",
-            key="nav_analysis",
-            on_change=on_analysis_change
+        # ONE radio with ALL pages - Streamlit handles everything!
+        page = st.radio(
+            "Navigate",
+            [
+                "── 📊 Analysis Tools ──",  # Visual header (not selectable)
+                "🏠 New Analysis",
+                "💬 General Consultation", 
+                "📈 Timeline Tracking",
+                "── 📚 Resources ──",  # Visual header (not selectable)
+                "🎓 Education",
+                "ℹ️ About"
+            ],
+            index=2,  # Default to General Consultation
+            label_visibility="collapsed"
         )
-        
-        # Section: Resources
-        st.markdown("---")
-        st.markdown("#### 📚 Resources")
-        page_resources = st.radio(
-            "Resources",
-            resource_options,
-            index=resource_index,
-            label_visibility="collapsed",
-            key="nav_resources",
-            on_change=on_resources_change
-        )
-    
-    # Use current_page for routing (updated by callbacks!)
-    page = st.session_state.current_page
     
     # Summary stats in sidebar
     with st.sidebar:
@@ -326,7 +274,8 @@ def main():
         st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
     
-    # Route to pages - SIMPLE! One variable routing
+    # Route to pages - Simple & clean!
+    # Headers are not routable - just visual separators
     if page == "🏠 New Analysis":
         page_new_analysis()
     elif page == "💬 General Consultation":
@@ -337,6 +286,9 @@ def main():
         page_education()
     elif page == "ℹ️ About":
         page_about()
+    elif page in ["── 📊 Analysis Tools ──", "── 📚 Resources ──"]:
+        # Headers clicked - show default page
+        page_general_consultation()
     else:
         # Fallback
         page_general_consultation()
