@@ -77,6 +77,158 @@ if 'current_consultation' not in st.session_state:
 def main():
     """Main application function"""
     
+    # Add Professional Detective Mode Styling
+    st.markdown("""
+    <style>
+    /* ========================================
+       DETECTIVE MODE - Purple Identity
+       ======================================== */
+    
+    /* Detective Mode Toggle/Checkbox Area */
+    div[data-testid="stCheckbox"] label:has(span:contains("Detective Mode")) {
+        color: #8B5CF6 !important;
+        font-weight: 600;
+        font-size: 1.05em;
+    }
+    
+    /* Detective Insight Card - Purple Gradient */
+    div:has(> h2:contains("AI Detective Insight")) {
+        background: linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(124,58,237,0.12) 100%);
+        border-left: 5px solid #8B5CF6;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(139,92,246,0.15);
+    }
+    
+    /* Detective Insight Header Styling */
+    h2:contains("AI Detective Insight") {
+        color: #7C3AED;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+    
+    /* Pattern Detection Results Subheader */
+    h3:contains("Pattern Detection Results") {
+        color: #8B5CF6;
+        font-size: 1.1em;
+        margin-top: 12px;
+    }
+    
+    /* ========================================
+       SOAP NOTE - Medical Teal Theme
+       ======================================== */
+    
+    /* SOAP Medical Summary Card */
+    div:has(> h2:contains("Medical Summary (SOAP Note)")) {
+        background: linear-gradient(135deg, rgba(20,184,166,0.05) 0%, rgba(14,165,233,0.08) 100%);
+        border-left: 5px solid #14B8A6;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(20,184,166,0.12);
+    }
+    
+    /* SOAP Note Headers */
+    h2:contains("Medical Summary") {
+        color: #0D9488;
+        font-weight: 700;
+    }
+    
+    /* ========================================
+       MODERN CARD ENHANCEMENTS
+       ======================================== */
+    
+    /* Success Boxes (Detective Pattern Found) */
+    div[data-testid="stSuccess"] {
+        border-radius: 8px;
+        border-left: 4px solid #8B5CF6;
+        background: linear-gradient(90deg, rgba(139,92,246,0.1), transparent);
+    }
+    
+    /* Info Boxes - Medical Blue */
+    div[data-testid="stInfo"] {
+        border-radius: 8px;
+        border-left: 4px solid #0EA5E9;
+        background: linear-gradient(90deg, rgba(14,165,233,0.08), transparent);
+    }
+    
+    /* Metrics - Modern Look */
+    div[data-testid="stMetric"] {
+        background: rgba(255,255,255,0.05);
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(139,92,246,0.2);
+    }
+    
+    /* ========================================
+       BUTTONS & INTERACTIONS
+       ======================================== */
+    
+    /* Primary Button - Purple Gradient for Detective Mode */
+    button[kind="primary"]:has(span:contains("Generate")) {
+        background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+        border: none;
+        box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+        transition: all 0.3s ease;
+    }
+    
+    button[kind="primary"]:has(span:contains("Generate")):hover {
+        box-shadow: 0 6px 16px rgba(139,92,246,0.4);
+        transform: translateY(-2px);
+    }
+    
+    /* Download PDF Button - Teal Medical */
+    button:has(span:contains("Download PDF")) {
+        background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+        color: white;
+        border: none;
+    }
+    
+    /* ========================================
+       TYPOGRAPHY ENHANCEMENTS
+       ======================================== */
+    
+    /* Section Headers - Better Hierarchy */
+    h3 {
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-top: 24px;
+        margin-bottom: 12px;
+    }
+    
+    /* Demo Mode Banner - Distinct Alert Style */
+    div[data-testid="stInfo"]:has(div:contains("DEMO MODE")) {
+        background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.1));
+        border-left: 4px solid #F59E0B;
+        border-radius: 8px;
+    }
+    
+    /* ========================================
+       RADIO BUTTONS - Clean Modern Style
+       ======================================== */
+    
+    div[data-testid="stRadio"] label {
+        font-weight: 500;
+        padding: 8px 0;
+    }
+    
+    /* ========================================
+       RESPONSIVE SPACING
+       ======================================== */
+    
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    
+    /* Reduce excessive whitespace */
+    .element-container {
+        margin-bottom: 0.5rem;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     # Header
     st.markdown("<h1>🩺 DermaCheck AI</h1>", unsafe_allow_html=True)
     st.markdown(
