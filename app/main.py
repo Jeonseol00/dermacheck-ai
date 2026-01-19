@@ -235,81 +235,27 @@ def main():
         "<p class='subtitle'>AI-Powered Skin Health Screening & Lesion Tracking</p>",
         unsafe_allow_html=True
     )
-    # Initialize selected_page if not exists (BEFORE sidebar!)
-    if 'selected_page' not in st.session_state:
-        st.session_state.selected_page = "💬 General Consultation"
-    
-    # Define radio options (BEFORE sidebar!)
-    analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
-    resource_options = ["🎓 Education", "ℹ️ About"]
-    
-    # Determine which radio should show selection (BEFORE sidebar!)
-    if st.session_state.selected_page in analysis_options:
-        analysis_index = analysis_options.index(st.session_state.selected_page)
-        resource_index = None  # No selection in Resources
-    elif st.session_state.selected_page in resource_options:
-        analysis_index = None  # No selection in Analysis Tools
-        resource_index = resource_options.index(st.session_state.selected_page)
-    else:
-        # Fallback
-        analysis_index = 1  # Default to General Consultation
-        resource_index = None
-    
-    # Professional Sidebar avec Branding
+    # SIMPLE APPROACH: Single Radio - Works WITH Streamlit! 🎯
     with st.sidebar:
         st.markdown("### ⚕️ DermaCheck AI")
         st.caption("v3.0 - Pattern Detection Engine")
         st.markdown("---")
         
-        st.markdown("#### 📊 Analysis Tools")
-        
-        # Analysis Tools Radio - with index control
+        # ONE radio with ALL pages - Streamlit handles selection automatically!
         page = st.radio(
             "Navigate",
-            analysis_options,
-            index=analysis_index,
-            key="analysis_nav",
+            [
+                "📊 Analysis Tools",  # Section header
+                "🏠 New Analysis",
+                "💬 General Consultation", 
+                "📈 Timeline Tracking",
+                "📚 Resources",  # Section header
+                "🎓 Education",
+                "ℹ️ About"
+            ],
+            index=1,  # Default to General Consultation
             label_visibility="collapsed"
         )
-        
-        st.markdown("---")
-        st.markdown("#### 📚 Resources")
-        
-        # Resources Radio - with index control
-        resource_page = st.radio(
-            "Resources",
-            resource_options,
-            index=resource_index,
-            key="resource_nav",
-            label_visibility="collapsed"
-        )
-    
-    # Track previous radio values untuk detect actual changes
-    if 'prev_page' not in st.session_state:
-        st.session_state.prev_page = page
-    if 'prev_resource' not in st.session_state:
-        st.session_state.prev_resource = resource_page
-    
-    # Update selected_page based on which ACTIVE radio CHANGED
-    # Only the radio with non-None index should be able to update
-    
-    if analysis_index is not None:
-        # Analysis Tools radio is active (has selection shown)
-        if page != st.session_state.prev_page:
-            # User clicked Analysis Tools radio - it changed!
-            st.session_state.selected_page = page
-            st.session_state.prev_page = page
-            # Reset Resources tracking
-            st.session_state.prev_resource = resource_page
-    
-    if resource_index is not None:
-        # Resources radio is active (has selection shown)
-        if resource_page != st.session_state.prev_resource:
-            # User clicked Resources radio - it changed!
-            st.session_state.selected_page = resource_page
-            st.session_state.prev_resource = resource_page
-            # Reset Analysis tracking
-            st.session_state.prev_page = page
     
     # Summary stats in sidebar
     with st.sidebar:
@@ -330,19 +276,21 @@ def main():
         st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
     
-    # Route to pages - SIMPLIFIED: Single source of truth
-    selected = st.session_state.selected_page
-    
-    if selected == "🏠 New Analysis":
+    # Route to pages - SIMPLE! Single source of truth
+    # Section headers are not routable - skip them
+    if page == "🏠 New Analysis":
         page_new_analysis()
-    elif selected == "💬 General Consultation":
+    elif page == "💬 General Consultation":
         page_general_consultation()
-    elif selected == "📈 Timeline Tracking":
+    elif page == "📈 Timeline Tracking":
         page_timeline_tracking()
-    elif selected == "🎓 Education":
+    elif page == "🎓 Education":
         page_education()
-    elif selected == "ℹ️ About":
+    elif page == "ℹ️ About":
         page_about()
+    elif page == "📊 Analysis Tools" or page == "📚 Resources":
+        # Section headers - show default page
+        page_general_consultation()
     else:
         # Fallback
         page_general_consultation()
