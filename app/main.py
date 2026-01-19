@@ -244,6 +244,15 @@ def main():
         
         st.markdown("#### 📊 Analysis Tools")
     
+    # Initialize session state for mutual exclusivity
+    if 'current_section' not in st.session_state:
+        st.session_state.current_section = 'analysis'  # Default to analysis tools
+    if 'analysis_index' not in st.session_state:
+        st.session_state.analysis_index = 1  # Default to General Consultation
+    if 'resource_index' not in st.session_state:
+        st.session_state.resource_index = None  # No selection by default
+    
+    # Analysis Tools Radio - with index control for mutual exclusivity
     page = st.sidebar.radio(
         "Navigate",
         [
@@ -251,21 +260,26 @@ def main():
             "💬 General Consultation", 
             "📈 Timeline Tracking"
         ],
-        label_visibility="collapsed"
+        index=st.session_state.analysis_index if st.session_state.current_section == 'analysis' else None,
+        label_visibility="collapsed",
+        key="analysis_radio"
     )
     
     # Resources section  
     with st.sidebar:
         st.markdown("---")
         st.markdown("#### 📚 Resources")
-        
+    
+    # Resources Radio - with index control for mutual exclusivity    
     resource_page = st.sidebar.radio(
         "Resources",
         [
             "🎓 Education",
             "ℹ️ About"
         ],
-        label_visibility="collapsed"
+        index=st.session_state.resource_index if st.session_state.current_section == 'resources' else None,
+        label_visibility="collapsed",
+        key="resource_radio"
     )
     
     # Summary stats in sidebar
@@ -289,22 +303,30 @@ def main():
                 with col3:
                     st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
-    # Route to pages - Fixed: Proper handling of dual radio groups
-    # Check which section was last interacted with
+    # Route to pages - Mutual Exclusivity Fixed
+    # Detect which radio was interacted with and update state
     
-    # Initialize session state for page tracking if not exists
-    if 'active_section' not in st.session_state:
-        st.session_state.active_section = 'analysis'
-    
-    # Detect which radio changed (simple approach: check if resource_page is selected)
+    # Check if resource_page was clicked
     if resource_page in ["🎓 Education", "ℹ️ About"]:
-        # Resources section is active
+        # User clicked Resources section
+        st.session_state.current_section = 'resources'
+        st.session_state.resource_index = ["🎓 Education", "ℹ️ About"].index(resource_page)
+        st.session_state.analysis_index = None  # Clear analysis selection
+        
+        # Render resource pages
         if resource_page == "🎓 Education":
             page_education()
         elif resource_page == "ℹ️ About":
             page_about()
-    else:
-        # Analysis Tools section is active (default)
+    
+    # Check if analysis page was clicked
+    elif page in ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]:
+        # User clicked Analysis Tools section
+        st.session_state.current_section = 'analysis'
+        st.session_state.analysis_index = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"].index(page)
+        st.session_state.resource_index = None  # Clear resource selection
+        
+        # Render analysis pages
         if page == "🏠 New Analysis":
             page_new_analysis()
         elif page == "💬 General Consultation":
