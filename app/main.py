@@ -267,7 +267,9 @@ def main():
         ],
         label_visibility="collapsed"
     )
-        
+    
+    # Summary stats in sidebar
+    with st.sidebar:
         st.markdown("---")
         
         # Summary stats
