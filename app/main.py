@@ -234,44 +234,31 @@ def main():
     st.markdown(
         "<p class='subtitle'>AI-Powered Skin Health Screening & Lesion Tracking</p>",
         unsafe_allow_html=True
-    )
+    
     # ✅ SINGLE RADIO SOLUTION - Simple & Bulletproof! 🎯
     with st.sidebar:
         st.markdown("### ⚕️ DermaCheck AI")
         st.caption("v3.0 - Pattern Detection Engine")
         st.markdown("---")
         
-        # Analysis Tools Section
+        # Visual header (markdown, NOT in radio)
         st.markdown("#### 📊 Analysis Tools")
-        page_analysis = st.radio(
-            "Analysis",
+        
+        # ONE single radio with all 5 pages
+        page = st.radio(
+            "Navigate",
             [
                 "🏠 New Analysis",
                 "💬 General Consultation", 
-                "📈 Timeline Tracking"
-            ],
-            index=1,  # Default to General Consultation
-            label_visibility="collapsed"
-        )
-        
-        # Resources Section
-        st.markdown("---")
-        st.markdown("#### 📚 Resources")
-        page_resources = st.radio(
-            "Resources",
-            [
+                "📈 Timeline Tracking",
+                "─────────────────",  # Visual separator
                 "🎓 Education",
                 "ℹ️ About"
             ],
-            index=None,  # No default selection
-            label_visibility="collapsed"
+            index=1,  # Default to General Consultation
+            label_visibility="collapsed",
+            format_func=lambda x: f"    {x}" if x == "─────────────────" else x
         )
-        
-        # Determine which page (last clicked wins)
-        if page_resources is not None:
-            page = page_resources
-        else:
-            page = page_analysis
     
     # Summary stats in sidebar
     with st.sidebar:
@@ -291,7 +278,6 @@ def main():
     
     
     # Route to pages - Simple & clean!
-    # Headers are not routable - just visual separators
     if page == "🏠 New Analysis":
         page_new_analysis()
     elif page == "💬 General Consultation":
@@ -302,6 +288,9 @@ def main():
         page_education()
     elif page == "ℹ️ About":
         page_about()
+    elif page == "─────────────────":
+        # Separator clicked - show default
+        page_general_consultation()
     else:
         # Fallback
         page_general_consultation()
