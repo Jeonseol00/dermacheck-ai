@@ -241,21 +241,37 @@ def main():
         st.caption("v3.0 - Pattern Detection Engine")
         st.markdown("---")
         
-        # ONE radio with ALL pages - Streamlit handles everything!
-        page = st.radio(
-            "Navigate",
+        # Analysis Tools Section
+        st.markdown("#### 📊 Analysis Tools")
+        page_analysis = st.radio(
+            "Analysis",
             [
-                "── 📊 Analysis Tools ──",  # Visual header (not selectable)
                 "🏠 New Analysis",
                 "💬 General Consultation", 
-                "📈 Timeline Tracking",
-                "── 📚 Resources ──",  # Visual header (not selectable)
+                "📈 Timeline Tracking"
+            ],
+            index=1,  # Default to General Consultation
+            label_visibility="collapsed"
+        )
+        
+        # Resources Section
+        st.markdown("---")
+        st.markdown("#### 📚 Resources")
+        page_resources = st.radio(
+            "Resources",
+            [
                 "🎓 Education",
                 "ℹ️ About"
             ],
-            index=2,  # Default to General Consultation
+            index=None,  # No default selection
             label_visibility="collapsed"
         )
+        
+        # Determine which page (last clicked wins)
+        if page_resources is not None:
+            page = page_resources
+        else:
+            page = page_analysis
     
     # Summary stats in sidebar
     with st.sidebar:
@@ -286,9 +302,6 @@ def main():
         page_education()
     elif page == "ℹ️ About":
         page_about()
-    elif page in ["── 📊 Analysis Tools ──", "── 📚 Resources ──"]:
-        # Headers clicked - show default page
-        page_general_consultation()
     else:
         # Fallback
         page_general_consultation()
