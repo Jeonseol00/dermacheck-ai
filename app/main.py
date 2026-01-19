@@ -285,11 +285,19 @@ def main():
             label_visibility="collapsed"
         )
     
-    # Detect which radio was actually clicked (value is not None when clicked)
-    if page is not None:
-        st.session_state.selected_page = page
-    if resource_page is not None:
-        st.session_state.selected_page = resource_page
+    # CRITICAL: Radio with index=None still returns first item value!
+    # We must check if the radio's index is active before updating selected_page
+    
+    # Only update selected_page if the clicked radio has an active index
+    if analysis_index is not None and page in analysis_options:
+        # Analysis Tools radio is active and was clicked
+        if page != st.session_state.selected_page:
+            st.session_state.selected_page = page
+    
+    if resource_index is not None and resource_page in resource_options:
+        # Resources radio is active and was clicked
+        if resource_page != st.session_state.selected_page:
+            st.session_state.selected_page = resource_page
     
     # Summary stats in sidebar
     with st.sidebar:
