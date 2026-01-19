@@ -269,17 +269,21 @@ def main():
         # Callbacks: Update page AND delete other widget key (runs BEFORE render!)
         def on_analysis_change():
             """User clicked Analysis radio - update page AND clear Resources"""
-            st.session_state.current_page = st.session_state.nav_analysis
-            # CRITICAL: Delete Resources key BEFORE next render!
-            if 'nav_resources' in st.session_state:
-                del st.session_state['nav_resources']
+            # Safety check: only update if key exists
+            if 'nav_analysis' in st.session_state:
+                st.session_state.current_page = st.session_state.nav_analysis
+                # CRITICAL: Delete Resources key BEFORE next render!
+                if 'nav_resources' in st.session_state:
+                    del st.session_state['nav_resources']
         
         def on_resources_change():
             """User clicked Resources radio - update page AND clear Analysis"""
-            st.session_state.current_page = st.session_state.nav_resources
-            # CRITICAL: Delete Analysis key BEFORE next render!
-            if 'nav_analysis' in st.session_state:
-                del st.session_state['nav_analysis']
+            # Safety check: only update if key exists
+            if 'nav_resources' in st.session_state:
+                st.session_state.current_page = st.session_state.nav_resources
+                # CRITICAL: Delete Analysis key BEFORE next render!
+                if 'nav_analysis' in st.session_state:
+                    del st.session_state['nav_analysis']
         
         page_analysis = st.radio(
             "Analysis",
