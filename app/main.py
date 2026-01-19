@@ -244,20 +244,18 @@ def main():
         # Visual header (markdown, NOT in radio)
         st.markdown("#### 📊 Analysis Tools")
         
-        # ONE single radio with all 5 pages
+        # ONE single radio with all 5 pages (clean, no separator!)
         page = st.radio(
             "Navigate",
             [
                 "🏠 New Analysis",
                 "💬 General Consultation", 
                 "📈 Timeline Tracking",
-                "─────────────────",  # Visual separator
                 "🎓 Education",
                 "ℹ️ About"
             ],
             index=1,  # Default to General Consultation
-            label_visibility="collapsed",
-            format_func=lambda x: f"    {x}" if x == "─────────────────" else x
+            label_visibility="collapsed"
         )
     
     # Summary stats in sidebar
@@ -277,7 +275,7 @@ def main():
         st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
     
-    # Route to pages - Simple & clean!
+    # Route to pages - Simple & clean! (5 pages only)
     if page == "🏠 New Analysis":
         page_new_analysis()
     elif page == "💬 General Consultation":
@@ -288,9 +286,6 @@ def main():
         page_education()
     elif page == "ℹ️ About":
         page_about()
-    elif page == "─────────────────":
-        # Separator clicked - show default
-        page_general_consultation()
     else:
         # Fallback
         page_general_consultation()
