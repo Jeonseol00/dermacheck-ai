@@ -243,14 +243,30 @@ def main():
         
         # Section: Analysis Tools
         st.markdown("#### 📊 Analysis Tools")
+        
+        # Initialize current page if not exists (BEFORE radios!)
+        if 'current_page' not in st.session_state:
+            st.session_state.current_page = "💬 General Consultation"
+        
+        # Define options
+        analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
+        resource_options = ["🎓 Education", "ℹ️ About"]
+        
+        # Calculate index based on current_page (VISUAL MUTUAL EXCLUSIVITY!)
+        if st.session_state.current_page in analysis_options:
+            analysis_index = analysis_options.index(st.session_state.current_page)
+            resource_index = None
+        elif st.session_state.current_page in resource_options:
+            analysis_index = None
+            resource_index = resource_options.index(st.session_state.current_page)
+        else:
+            analysis_index = 1
+            resource_index = None
+        
         page_analysis = st.radio(
             "Analysis",
-            [
-                "🏠 New Analysis",
-                "💬 General Consultation", 
-                "📈 Timeline Tracking"
-            ],
-            index=1,  # Default to General Consultation
+            analysis_options,
+            index=analysis_index,
             label_visibility="collapsed",
             key="nav_analysis"
         )
@@ -260,18 +276,11 @@ def main():
         st.markdown("#### 📚 Resources")
         page_resources = st.radio(
             "Resources",
-            [
-                "🎓 Education",
-                "ℹ️ About"
-            ],
-            index=None,  # No default selection
+            resource_options,
+            index=resource_index,
             label_visibility="collapsed",
             key="nav_resources"
         )
-    
-    # Initialize current page if not exists
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = "💬 General Consultation"
     
     # Track previous radio values to detect ACTUAL changes
     if 'prev_analysis_val' not in st.session_state:
