@@ -252,39 +252,34 @@ def main():
         analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
         resource_options = ["🎓 Education", "ℹ️ About"]
         
-        # Calculate index based on current_page (VISUAL MUTUAL EXCLUSIVITY!)
+        # Calculate index based on current_page (ONLY calculate, NO deletion here!)
         if st.session_state.current_page in analysis_options:
             # Current page in Analysis Tools
             analysis_index = analysis_options.index(st.session_state.current_page)
             resource_index = None
-            # NUCLEAR OPTION: Delete Resources widget key! (Memory Wipe!)
-            if 'nav_resources' in st.session_state:
-                del st.session_state['nav_resources']
-                
         elif st.session_state.current_page in resource_options:
             # Current page in Resources
             analysis_index = None
             resource_index = resource_options.index(st.session_state.current_page)
-            # NUCLEAR OPTION: Delete Analysis widget key! (Memory Wipe!)
-            if 'nav_analysis' in st.session_state:
-                del st.session_state['nav_analysis']
-                
         else:
             # Fallback
             analysis_index = 1
             resource_index = None
-            # Clear both widget keys
+        
+        # Callbacks: Update page AND delete other widget key (runs BEFORE render!)
+        def on_analysis_change():
+            """User clicked Analysis radio - update page AND clear Resources"""
+            st.session_state.current_page = st.session_state.nav_analysis
+            # CRITICAL: Delete Resources key BEFORE next render!
             if 'nav_resources' in st.session_state:
                 del st.session_state['nav_resources']
         
-        # Callbacks for immediate visual update (runs BEFORE render!)
-        def on_analysis_change():
-            """Update current_page when Analysis radio clicked"""
-            st.session_state.current_page = st.session_state.nav_analysis
-        
         def on_resources_change():
-            """Update current_page when Resources radio clicked"""
+            """User clicked Resources radio - update page AND clear Analysis"""
             st.session_state.current_page = st.session_state.nav_resources
+            # CRITICAL: Delete Analysis key BEFORE next render!
+            if 'nav_analysis' in st.session_state:
+                del st.session_state['nav_analysis']
         
         page_analysis = st.radio(
             "Analysis",
