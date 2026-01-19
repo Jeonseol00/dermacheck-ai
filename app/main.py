@@ -284,19 +284,32 @@ def main():
             label_visibility="collapsed"
         )
     
-    # CRITICAL: Radio with index=None still returns first item value!
-    # We must check if the radio's index is active before updating selected_page
+    # Track previous radio values untuk detect actual changes
+    if 'prev_page' not in st.session_state:
+        st.session_state.prev_page = page
+    if 'prev_resource' not in st.session_state:
+        st.session_state.prev_resource = resource_page
     
-    # Only update selected_page if the clicked radio has an active index
-    if analysis_index is not None and page in analysis_options:
-        # Analysis Tools radio is active and was clicked
-        if page != st.session_state.selected_page:
+    # Update selected_page based on which ACTIVE radio CHANGED
+    # Only the radio with non-None index should be able to update
+    
+    if analysis_index is not None:
+        # Analysis Tools radio is active (has selection shown)
+        if page != st.session_state.prev_page:
+            # User clicked Analysis Tools radio - it changed!
             st.session_state.selected_page = page
+            st.session_state.prev_page = page
+            # Reset Resources tracking
+            st.session_state.prev_resource = resource_page
     
-    if resource_index is not None and resource_page in resource_options:
-        # Resources radio is active and was clicked
-        if resource_page != st.session_state.selected_page:
+    if resource_index is not None:
+        # Resources radio is active (has selection shown)
+        if resource_page != st.session_state.prev_resource:
+            # User clicked Resources radio - it changed!
             st.session_state.selected_page = resource_page
+            st.session_state.prev_resource = resource_page
+            # Reset Analysis tracking
+            st.session_state.prev_page = page
     
     # Summary stats in sidebar
     with st.sidebar:
