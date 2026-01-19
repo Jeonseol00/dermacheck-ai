@@ -235,6 +235,25 @@ def main():
         "<p class='subtitle'>AI-Powered Skin Health Screening & Lesion Tracking</p>",
         unsafe_allow_html=True
     )
+    # Initialize selected_page if not exists (BEFORE sidebar!)
+    if 'selected_page' not in st.session_state:
+        st.session_state.selected_page = "💬 General Consultation"
+    
+    # Define radio options (BEFORE sidebar!)
+    analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
+    resource_options = ["🎓 Education", "ℹ️ About"]
+    
+    # Determine which radio should show selection (BEFORE sidebar!)
+    if st.session_state.selected_page in analysis_options:
+        analysis_index = analysis_options.index(st.session_state.selected_page)
+        resource_index = None  # No selection in Resources
+    elif st.session_state.selected_page in resource_options:
+        analysis_index = None  # No selection in Analysis Tools
+        resource_index = resource_options.index(st.session_state.selected_page)
+    else:
+        # Fallback
+        analysis_index = 1  # Default to General Consultation
+        resource_index = None
     
     # Professional Sidebar avec Branding
     with st.sidebar:
@@ -243,26 +262,6 @@ def main():
         st.markdown("---")
         
         st.markdown("#### 📊 Analysis Tools")
-        
-        # Initialize selected_page if not exists
-        if 'selected_page' not in st.session_state:
-            st.session_state.selected_page = "💬 General Consultation"
-        
-        # Define radio options
-        analysis_options = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]
-        resource_options = ["🎓 Education", "ℹ️ About"]
-        
-        # Determine which radio should show selection (index control for visual mutual exclusivity)
-        if st.session_state.selected_page in analysis_options:
-            analysis_index = analysis_options.index(st.session_state.selected_page)
-            resource_index = None  # No selection in Resources
-        elif st.session_state.selected_page in resource_options:
-            analysis_index = None  # No selection in Analysis Tools
-            resource_index = resource_options.index(st.session_state.selected_page)
-        else:
-            # Fallback
-            analysis_index = 1  # Default to General Consultation
-            resource_index = None
         
         # Analysis Tools Radio - with index control
         page = st.radio(
