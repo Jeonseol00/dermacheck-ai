@@ -241,11 +241,17 @@ def main():
         """Called when Analysis Tools radio is clicked - clears Resources selection"""
         st.session_state.current_section = 'analysis'
         st.session_state.resource_index = None
+        # CRITICAL: Delete widget key from session state (overrides index param!)
+        if "resource_radio" in st.session_state:
+            del st.session_state["resource_radio"]
     
     def reset_analysis():
         """Called when Resources radio is clicked - clears Analysis Tools selection"""
         st.session_state.current_section = 'resources'
         st.session_state.analysis_index = None
+        # CRITICAL: Delete widget key from session state (overrides index param!)
+        if "analysis_radio" in st.session_state:
+            del st.session_state["analysis_radio"]
     
     # Professional Sidebar avec Branding
     with st.sidebar:
