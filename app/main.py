@@ -241,21 +241,39 @@ def main():
         st.caption("v3.0 - Pattern Detection Engine")
         st.markdown("---")
         
-        # ONE radio with ALL pages - Streamlit handles selection automatically!
-        page = st.radio(
-            "Navigate",
+        # Section: Analysis Tools
+        st.markdown("#### 📊 Analysis Tools")
+        page_analysis = st.radio(
+            "Analysis",
             [
-                "📊 Analysis Tools",  # Section header
                 "🏠 New Analysis",
                 "💬 General Consultation", 
-                "📈 Timeline Tracking",
-                "📚 Resources",  # Section header
+                "📈 Timeline Tracking"
+            ],
+            index=1,  # Default to General Consultation
+            label_visibility="collapsed",
+            key="nav_analysis"
+        )
+        
+        # Section: Resources
+        st.markdown("---")
+        st.markdown("#### 📚 Resources")
+        page_resources = st.radio(
+            "Resources",
+            [
                 "🎓 Education",
                 "ℹ️ About"
             ],
-            index=1,  # Default to General Consultation
-            label_visibility="collapsed"
+            index=None,  # No default selection
+            label_visibility="collapsed",
+            key="nav_resources"
         )
+    
+    # Determine which page to show (last clicked wins)
+    if page_resources is not None:
+        page = page_resources
+    else:
+        page = page_analysis
     
     # Summary stats in sidebar
     with st.sidebar:
@@ -271,13 +289,10 @@ def main():
             if stats['total_lesions'] > 0:
                 st.markdown("**Risk Distribution:**")
                 col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.markdown(f"🟢 {stats['risk_distribution']['low']}")
         st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
     
-    # Route to pages - SIMPLE! Single source of truth
-    # Section headers are not routable - skip them
+    # Route to pages - SIMPLE! One variable routing
     if page == "🏠 New Analysis":
         page_new_analysis()
     elif page == "💬 General Consultation":
@@ -288,9 +303,6 @@ def main():
         page_education()
     elif page == "ℹ️ About":
         page_about()
-    elif page == "📊 Analysis Tools" or page == "📚 Resources":
-        # Section headers - show default page
-        page_general_consultation()
     else:
         # Fallback
         page_general_consultation()
