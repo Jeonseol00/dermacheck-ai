@@ -263,12 +263,22 @@ def main():
             analysis_index = 1
             resource_index = None
         
+        # Callbacks for immediate visual update (runs BEFORE render!)
+        def on_analysis_change():
+            """Update current_page when Analysis radio clicked"""
+            st.session_state.current_page = st.session_state.nav_analysis
+        
+        def on_resources_change():
+            """Update current_page when Resources radio clicked"""
+            st.session_state.current_page = st.session_state.nav_resources
+        
         page_analysis = st.radio(
             "Analysis",
             analysis_options,
             index=analysis_index,
             label_visibility="collapsed",
-            key="nav_analysis"
+            key="nav_analysis",
+            on_change=on_analysis_change
         )
         
         # Section: Resources
@@ -279,28 +289,11 @@ def main():
             resource_options,
             index=resource_index,
             label_visibility="collapsed",
-            key="nav_resources"
+            key="nav_resources",
+            on_change=on_resources_change
         )
     
-    # Track previous radio values to detect ACTUAL changes
-    if 'prev_analysis_val' not in st.session_state:
-        st.session_state.prev_analysis_val = page_analysis
-    if 'prev_resources_val' not in st.session_state:
-        st.session_state.prev_resources_val = page_resources
-    
-    # CRITICAL: Detect which radio ACTUALLY CHANGED
-    analysis_changed = (page_analysis != st.session_state.prev_analysis_val)
-    resources_changed = (page_resources != st.session_state.prev_resources_val and page_resources is not None)
-    
-    # Update current_page based on which radio changed
-    if analysis_changed:
-        st.session_state.current_page = page_analysis
-        st.session_state.prev_analysis_val = page_analysis
-    elif resources_changed:
-        st.session_state.current_page = page_resources
-        st.session_state.prev_resources_val = page_resources
-    
-    # Use the tracked current page for routing
+    # Use current_page for routing (updated by callbacks!)
     page = st.session_state.current_page
     
     # Summary stats in sidebar
