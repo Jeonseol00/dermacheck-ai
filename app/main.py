@@ -18,12 +18,17 @@ from utils.image_utils import (
 )
 from utils.config import Config
 
-# Page configuration
+# Page configuration - Professional Medical SaaS Branding
 st.set_page_config(
-    page_title="DermaCheck AI - Dermatology Screening",
-    page_icon="🩺",
+    page_title="DermaCheck AI v3.0 - Medical Analysis Platform",
+    page_icon="\ud83e\ude7a",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': "DermaCheck AI v3.0 - Advanced Medical Symptom Analysis with Historical Pattern Detection Engine"
+    }
 )
 
 # Load custom CSS
@@ -79,14 +84,37 @@ def main():
         unsafe_allow_html=True
     )
     
-    # Sidebar navigation
+    # Professional Sidebar avec Branding
     with st.sidebar:
-        st.markdown("### Navigation")
-        page = st.radio(
-            "Select Feature",
-            ["🏠 New Analysis", "💬 General Consultation", "📊 Timeline Tracking", "📚 Education", "ℹ️ About"],
-            label_visibility="collapsed"
-        )
+        st.markdown("### 🩺 DermaCheck AI")
+        st.caption("v3.0 - Pattern Detection Engine")
+        st.markdown("---")
+        
+        st.markdown("#### 📊 Analysis Tools")
+    
+    page = st.sidebar.radio(
+        "Navigate",
+        [
+            "🏠 New Analysis",
+            "💬 General Consultation", 
+            "📈 Timeline Tracking"
+        ],
+        label_visibility="collapsed"
+    )
+    
+    # Resources section  
+    with st.sidebar:
+        st.markdown("---")
+        st.markdown("#### 📚 Resources")
+        
+    resource_page = st.sidebar.radio(
+        "Resources",
+        [
+            "🎓 Education",
+            "ℹ️ About"
+        ],
+        label_visibility="collapsed"
+    )
         
         st.markdown("---")
         
@@ -107,16 +135,16 @@ def main():
                 with col3:
                     st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
-    # Route to selected page
-    if "New Analysis" in page:
+    # Route to pages based on selection
+    if page == "🏠 New Analysis":
         page_new_analysis()
-    elif "General Consultation" in page:
+    elif page == "💬 General Consultation":
         page_general_consultation()
-    elif "Timeline" in page:
+    elif page == "📈 Timeline Tracking":
         page_timeline_tracking()
-    elif "Education" in page:
+    elif resource_page == "🎓 Education":
         page_education()
-    else:
+    elif resource_page == "ℹ️ About":
         page_about()
     
     # Footer disclaimer
