@@ -254,14 +254,28 @@ def main():
         
         # Calculate index based on current_page (VISUAL MUTUAL EXCLUSIVITY!)
         if st.session_state.current_page in analysis_options:
+            # Current page in Analysis Tools
             analysis_index = analysis_options.index(st.session_state.current_page)
             resource_index = None
+            # NUCLEAR OPTION: Delete Resources widget key! (Memory Wipe!)
+            if 'nav_resources' in st.session_state:
+                del st.session_state['nav_resources']
+                
         elif st.session_state.current_page in resource_options:
+            # Current page in Resources
             analysis_index = None
             resource_index = resource_options.index(st.session_state.current_page)
+            # NUCLEAR OPTION: Delete Analysis widget key! (Memory Wipe!)
+            if 'nav_analysis' in st.session_state:
+                del st.session_state['nav_analysis']
+                
         else:
+            # Fallback
             analysis_index = 1
             resource_index = None
+            # Clear both widget keys
+            if 'nav_resources' in st.session_state:
+                del st.session_state['nav_resources']
         
         # Callbacks for immediate visual update (runs BEFORE render!)
         def on_analysis_change():
