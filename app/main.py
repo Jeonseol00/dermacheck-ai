@@ -270,13 +270,25 @@ def main():
             label_visibility="collapsed"
         )
     
-    # Update selected page based on which radio changed
-    # Streamlit radios are mutually exclusive within the same context (sidebar here).
-    # The last radio interacted with will set the session state.
-    if page:
+    # Initialize selected_page if not exists
+    if 'selected_page' not in st.session_state:
+        st.session_state.selected_page = "💬 General Consultation"
+    
+    # Track previous values to detect which radio changed
+    if 'prev_analysis' not in st.session_state:
+        st.session_state.prev_analysis = page
+    if 'prev_resource' not in st.session_state:
+        st.session_state.prev_resource = resource_page
+    
+    # Detect which radio button actually changed
+    if page != st.session_state.prev_analysis:
+        # Analysis Tools radio changed
         st.session_state.selected_page = page
-    if resource_page:
+        st.session_state.prev_analysis = page
+    elif resource_page != st.session_state.prev_resource:
+        # Resources radio changed
         st.session_state.selected_page = resource_page
+        st.session_state.prev_resource = resource_page
     
     # Summary stats in sidebar
     with st.sidebar:
