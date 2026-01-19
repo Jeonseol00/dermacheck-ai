@@ -234,7 +234,7 @@ def main():
     st.markdown(
         "<p class='subtitle'>AI-Powered Skin Health Screening & Lesion Tracking</p>",
         unsafe_allow_html=True
-    
+    )
     # ✅ SINGLE RADIO SOLUTION - Simple & Bulletproof! 🎯
     with st.sidebar:
         st.markdown("### ⚕️ DermaCheck AI")
