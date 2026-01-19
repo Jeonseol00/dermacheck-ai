@@ -21,7 +21,7 @@ from utils.config import Config
 # Page configuration - Professional Medical SaaS Branding
 st.set_page_config(
     page_title="DermaCheck AI v3.0 - Medical Analysis Platform",
-    page_icon="\ud83e\ude7a",
+    page_icon="⚕️",  # Medical symbol - safe across all platforms
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
