@@ -236,9 +236,20 @@ def main():
         unsafe_allow_html=True
     )
     
+    # Callback functions for mutual exclusivity
+    def reset_resources():
+        """Called when Analysis Tools radio is clicked - clears Resources selection"""
+        st.session_state.current_section = 'analysis'
+        st.session_state.resource_index = None
+    
+    def reset_analysis():
+        """Called when Resources radio is clicked - clears Analysis Tools selection"""
+        st.session_state.current_section = 'resources'
+        st.session_state.analysis_index = None
+    
     # Professional Sidebar avec Branding
     with st.sidebar:
-        st.markdown("### 🩺 DermaCheck AI")
+        st.markdown("### ⚕️ DermaCheck AI")
         st.caption("v3.0 - Pattern Detection Engine")
         st.markdown("---")
         
@@ -252,7 +263,7 @@ def main():
     if 'resource_index' not in st.session_state:
         st.session_state.resource_index = None  # No selection by default
     
-    # Analysis Tools Radio - with index control for mutual exclusivity
+    # Analysis Tools Radio - with callback to reset Resources
     page = st.sidebar.radio(
         "Navigate",
         [
@@ -262,7 +273,8 @@ def main():
         ],
         index=st.session_state.analysis_index if st.session_state.current_section == 'analysis' else None,
         label_visibility="collapsed",
-        key="analysis_radio"
+        key="analysis_radio",
+        on_change=reset_resources  # Reset Resources when clicked
     )
     
     # Resources section  
@@ -270,7 +282,7 @@ def main():
         st.markdown("---")
         st.markdown("#### 📚 Resources")
     
-    # Resources Radio - with index control for mutual exclusivity    
+    # Resources Radio - with callback to reset Analysis Tools    
     resource_page = st.sidebar.radio(
         "Resources",
         [
@@ -279,7 +291,8 @@ def main():
         ],
         index=st.session_state.resource_index if st.session_state.current_section == 'resources' else None,
         label_visibility="collapsed",
-        key="resource_radio"
+        key="resource_radio",
+        on_change=reset_analysis  # Reset Analysis Tools when clicked
     )
     
     # Summary stats in sidebar
