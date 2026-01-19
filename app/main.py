@@ -317,41 +317,43 @@ def main():
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     st.markdown(f"🟢 {stats['risk_distribution']['low']}")
-                with col2:
-                    st.markdown(f"🟡 {stats['risk_distribution']['medium']}")
-                with col3:
-                    st.markdown(f"🔴 {stats['risk_distribution']['high']}")
+        st.markdown(f"🔴 {stats['risk_distribution']['high']}")
     
-    # Route to pages - Mutual Exclusivity Fixed
-    # Detect which radio was interacted with and update state
+    # Route to pages - Fixed: Use session_state instead of widget return values
+    # Widget values can be None after deletion, causing blank page!
     
-    # Check if resource_page was clicked
-    if resource_page in ["🎓 Education", "ℹ️ About"]:
-        # User clicked Resources section
-        st.session_state.current_section = 'resources'
-        st.session_state.resource_index = ["🎓 Education", "ℹ️ About"].index(resource_page)
-        st.session_state.analysis_index = None  # Clear analysis selection
+    # Render based on current_section state (more reliable than widget values)
+    if st.session_state.current_section == 'resources':
+        # Resources section is active
+        # Update index if resource_page has value
+        if resource_page and resource_page in ["🎓 Education", "ℹ️ About"]:
+            st.session_state.resource_index = ["🎓 Education", "ℹ️ About"].index(resource_page)
         
-        # Render resource pages
-        if resource_page == "🎓 Education":
+        # Render based on stored index
+        if st.session_state.resource_index == 0:
             page_education()
-        elif resource_page == "ℹ️ About":
+        elif st.session_state.resource_index == 1:
+            page_about()
+        else:
+            # Fallback to About if index not set
             page_about()
     
-    # Check if analysis page was clicked
-    elif page in ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]:
-        # User clicked Analysis Tools section
-        st.session_state.current_section = 'analysis'
-        st.session_state.analysis_index = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"].index(page)
-        st.session_state.resource_index = None  # Clear resource selection
+    else:  # current_section == 'analysis' (default)
+        # Analysis Tools section is active
+        # Update index if page has value
+        if page and page in ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"]:
+            st.session_state.analysis_index = ["🏠 New Analysis", "💬 General Consultation", "📈 Timeline Tracking"].index(page)
         
-        # Render analysis pages
-        if page == "🏠 New Analysis":
+        # Render based on stored index
+        if st.session_state.analysis_index == 0:
             page_new_analysis()
-        elif page == "💬 General Consultation":
+        elif st.session_state.analysis_index == 1:
             page_general_consultation()
-        elif page == "📈 Timeline Tracking":
+        elif st.session_state.analysis_index == 2:
             page_timeline_tracking()
+        else:
+            # Fallback to General Consultation if index not set
+            page_general_consultation()
     
     # Footer disclaimer
     st.markdown("---")
