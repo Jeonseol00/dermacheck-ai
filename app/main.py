@@ -269,11 +269,30 @@ def main():
             key="nav_resources"
         )
     
-    # Determine which page to show (last clicked wins)
-    if page_resources is not None:
-        page = page_resources
-    else:
-        page = page_analysis
+    # Initialize current page if not exists
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = "💬 General Consultation"
+    
+    # Track previous radio values to detect ACTUAL changes
+    if 'prev_analysis_val' not in st.session_state:
+        st.session_state.prev_analysis_val = page_analysis
+    if 'prev_resources_val' not in st.session_state:
+        st.session_state.prev_resources_val = page_resources
+    
+    # CRITICAL: Detect which radio ACTUALLY CHANGED
+    analysis_changed = (page_analysis != st.session_state.prev_analysis_val)
+    resources_changed = (page_resources != st.session_state.prev_resources_val and page_resources is not None)
+    
+    # Update current_page based on which radio changed
+    if analysis_changed:
+        st.session_state.current_page = page_analysis
+        st.session_state.prev_analysis_val = page_analysis
+    elif resources_changed:
+        st.session_state.current_page = page_resources
+        st.session_state.prev_resources_val = page_resources
+    
+    # Use the tracked current page for routing
+    page = st.session_state.current_page
     
     # Summary stats in sidebar
     with st.sidebar:
