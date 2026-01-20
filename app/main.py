@@ -457,6 +457,19 @@ def perform_analysis(image, body_location, existing_lesion_id=None):
     # Run ABCDE analysis
     abcde_results = st.session_state.abcde_analyzer.analyze(image, previous_data)
     
+    # CHECK: If blank detection rejected the image, show error and stop!
+    if abcde_results.get('status') == 'rejected':
+        st.error(abcde_results.get('message', '⚠️ Image rejected'))
+        st.info(abcde_results.get('recommendation', 'Please try again with a clearer image'))
+        
+        # Show blank detection details
+        if 'blank_detection' in abcde_results:
+            blank_info = abcde_results['blank_detection']
+            st.warning(f"📊 Variance detected: {blank_info['variance']:.1f} (threshold: {blank_info['threshold']})")
+        
+        return  # Stop here, don't call medgemma!
+    
+    # Continue with medgemma ONLY if ABCDE analysis passed
     # Get Med-Gemma interpretation
     medgemma_results = None
     if st.session_state.medgemma_client:
