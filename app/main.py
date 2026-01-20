@@ -357,13 +357,52 @@ def page_new_analysis():
         is_valid, message = validate_image(uploaded_file)
         
         if is_valid:
-            # Display uploaded image
+            # Load uploaded image
             image = Image.open(uploaded_file)
             
+            # PHASE 2: Cropper Feature! ✂️
+            st.markdown("---")
+            st.markdown("### ✂️ Crop Foto (Opsional)")
+            st.info("💡 **Tip:** Jika foto terlalu jauh, crop ke area lesi untuk hasil lebih akurat!")
+            
+            # Import cropper
+            try:
+                from streamlit_cropper import st_cropper
+                
+                # Cropping UI
+                col_crop1, col_crop2 = st.columns([2, 1])
+                
+                with col_crop1:
+                    # Cropper widget
+                    cropped_img = st_cropper(
+                        image, 
+                        realtime_update=True,
+                        box_color='#00FF00',
+                        aspect_ratio=None,  # Free aspect ratio
+                        return_type='image'
+                    )
+                
+                with col_crop2:
+                    st.markdown("**Preview Hasil Crop:**")
+                    st.image(cropped_img, use_container_width=True)
+                    
+                    # Use cropped or original?
+                    use_crop = st.checkbox("✅ Gunakan Hasil Crop", value=False, 
+                                          help="Centang untuk menggunakan foto yang sudah di-crop")
+                
+                # Determine which image to analyze
+                final_image = cropped_img if use_crop else image
+            except ImportError:
+                st.warning("⚠️ Cropper not installed. Using original image.")
+                final_image = image
+            
+            st.markdown("---")
+            
+            # Display final image
             col1, col2 = st.columns(2)
             
             with col1:
-                st.image(image, caption="Uploaded Image", use_container_width=True)
+                st.image(final_image, caption="Foto yang Akan Dianalisa", use_container_width=True)
             
             with col2:
                 # Additional context
