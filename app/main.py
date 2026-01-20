@@ -431,7 +431,7 @@ def page_new_analysis():
             # Analyze button
             if st.button("🔍 Analyze Lesion", type="primary", use_container_width=True):
                 with st.spinner("Analyzing lesion... This may take a moment."):
-                    perform_analysis(image, body_location, existing_lesion_id)
+                    perform_analysis(final_image, body_location, existing_lesion_id)
             
             # Display results if available
             if st.session_state.current_analysis:

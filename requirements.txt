@@ -27,3 +27,6 @@ kaggle==1.5.16
 pytest==8.0.0
 pytest-cov==4.1.0
 fpdf2>=2.7.0
+
+# Image Cropper (Phase 2)
+streamlit-cropper>=0.2.1
