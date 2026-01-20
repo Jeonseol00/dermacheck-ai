@@ -8,6 +8,7 @@ from PIL import Image
 from typing import Dict, Tuple
 from sklearn.cluster import KMeans
 from utils.config import Config
+from utils.image_utils import is_blank_image  # Blank detection!
 
 
 class ABCDEAnalyzer:
@@ -29,6 +30,29 @@ class ABCDEAnalyzer:
         Returns:
             Dictionary with ABCDE scores and risk assessment
         """
+        # PHASE 1: BLANK IMAGE CHECK (Pre-filter!)
+        is_blank, variance, blank_msg = is_blank_image(image, variance_threshold=500)
+        
+        if is_blank:
+            # Reject blank/empty crops!
+            return {
+                "status": "rejected",
+                "risk_level": "INSUFFICIENT_DATA",
+                "total_score": 0,
+                "max_score": 11,
+                "message": blank_msg,
+                "recommendation": "📸 Silakan crop ulang dengan area lesi yang lebih jelas.",
+                "blank_detection": {
+                    "variance": variance,
+                    "threshold": 500,
+                    "is_blank": True
+                },
+                "abcde_scores": None,
+                "descriptions": None,
+                "visual_features": None
+            }
+        
+        # PHASE 2: Continue to ABCDE Analysis (image has enough detail)
         # Convert to numpy array
         img_array = np.array(image)
         

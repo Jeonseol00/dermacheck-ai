@@ -8,6 +8,37 @@ import cv2
 from typing import Tuple, Optional
 from utils.config import Config
 
+
+def is_blank_image(image, variance_threshold=500):
+    """
+    Detect if image is blank/empty using variance check.
+    Phase 1: Simple variance detection (quick win!)
+    
+    Args:
+        image: PIL Image object
+        variance_threshold: Threshold for variance (default: 500)
+        
+    Returns:
+        tuple: (is_blank: bool, variance: float, message: str)
+    """
+    # Convert to grayscale array
+    gray = np.array(image.convert('L'))
+    
+    # Calculate variance
+    variance = np.var(gray)
+    
+    # Check if blank
+    is_blank = variance < variance_threshold
+    
+    # Generate message
+    if is_blank:
+        message = f"⚠️ Area yang di-crop terlalu kosong/polos (variance: {variance:.1f}). Pastikan area crop mencakup lesi yang jelas."
+    else:
+        message = f"✅ Cukup detail untuk dianalisa (variance: {variance:.1f})"
+    
+    return is_blank, variance, message
+
+
 def validate_image(image_file) -> Tuple[bool, str]:
     """
     Validate uploaded image file
