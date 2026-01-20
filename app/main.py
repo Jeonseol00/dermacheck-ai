@@ -572,66 +572,44 @@ def display_analysis_results(analysis):
 
 
 def page_timeline_tracking():
-    """Timeline tracking page"""
-    st.markdown("## 📊 Lesion Timeline Tracking")
+    """Timeline Tracking Page - Monitor lesion changes over time"""
+    st.title("📈 Timeline Tracking")
+    st.markdown("Track changes in your skin lesions over time to identify concerning patterns.")
     
+    if not st.session_state.timeline_manager:
+        st.error("Timeline manager not initialized")
+        return
+    
+    # Get all lesions
     lesions = st.session_state.timeline_manager.get_all_lesions()
     
     if not lesions:
-        st.info("📭 No lesions tracked yet. Upload a new image to get started!")
+        st.info("No lesions tracked yet. Start by analyzing a lesion in the 'New Analysis' page!")
         return
     
     # Lesion selector
+    st.markdown("### Select Lesion to View")
     lesion_options = {
-        f"{l['lesion_id']} - {l['body_location'].replace('_', ' ').title()}": l
+        f"{l['lesion_id']} - {l['body_location'].replace('_', ' ').title()}": l['lesion_id']
         for l in lesions
     }
     
-    selected_name = st.selectbox("Select Lesion to View", list(lesion_options.keys()))
-    selected_lesion = lesion_options[selected_name]
+    selected_display = st.selectbox("Choose a lesion", list(lesion_options.keys()))
+    selected_lesion_id = lesion_options[selected_display]
+    
+    # Get timeline for selected lesion
+    timeline = st.session_state.timeline_manager.get_lesion_timeline(selected_lesion_id)
+    
+    if not timeline:
+        st.warning("No timeline data found for this lesion")
+        return
     
     # Display timeline
-    timeline = selected_lesion['timeline']
-    
-    st.markdown(f"### {selected_lesion['body_location'].replace('_', ' ').title()}")
-    st.markdown(f"**Total scans:** {len(timeline)}")
-    st.markdown(f"**First seen:** {datetime.fromisoformat(timeline[0]['timestamp']).strftime('%Y-%m-%d')}")
-    st.markdown(f"**Last updated:** {datetime.fromisoformat(timeline[-1]['timestamp']).strftime('%Y-%m-%d')}")
+    st.markdown(f"### Timeline for {selected_display}")
+    st.markdown(f"**Total Entries:** {len(timeline)}")
     
     # Timeline visualization
-    st.markdown("---")
-    st.markdown("### Timeline")
-    
     for i, entry in enumerate(reversed(timeline)):
-        col1, col2, col3 = st.columns([1, 2, 2])
-        
-        with col1:
-            st.markdown(f"**#{len(timeline) - i}**")
-            st.markdown(datetime.fromisoformat(entry['timestamp']).strftime('%Y-%m-%d'))
-        
-        with col2:
-            if os.path.exists(entry['image_path']):
-                img = Image.open(entry['image_path'])
-                st.image(img, width="stretch")
-        
-        with col3:
-            risk_color = {"LOW": "🟢", "MEDIUM": "🟡", "HIGH": "🔴"}[entry['risk_level']]
-            st.markdown(f"{risk_color} **{entry['risk_level']} RISK**")
-            st.markdown(f"**Score:** {entry['abcde_score']}/11")
-            st.markdown(f"**Size:** {entry['size_mm']}mm")
-        
-        st.markdown("---")
-    
-    # Comparison view
-    if len(timeline) >= 2:
-        st.markdown("### 🔀 Progression Comparison")
-        
-        comparison = st.session_state.timeline_manager.compare_entries(selected_lesion['lesion_id'])
-        
-        if comparison:
-            col1, col2 = st.columns(2)
-            
-            with col1:
                 st.markdown("**Earlier Scan**")
                 if os.path.exists(comparison['entry1']['image_path']):
                     st.image(Image.open(comparison['entry1']['image_path']))
