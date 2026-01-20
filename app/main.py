@@ -627,7 +627,64 @@ def page_timeline_tracking():
             changes = comparison['changes']
             st.markdown(f"**Time elapsed:** {comparison['time_elapsed_days']} days")
             st.markdown(f"**Size change:** {changes['size_percent']:+.1f}%")
-            st.markdown(f"**Score change:** {changes['score']:+d} points")
+            
+            if changes['score_increase'] > 0:
+                st.warning(f"⚠️ Risk score increased by {changes['score_increase']} points")
+            elif changes['score_increase'] < 0:
+                st.success(f"✅ Risk score decreased by {abs(changes['score_increase'])} points")
+    
+    # ===========================
+    # PILLAR 2: MEDICAL REPORT PDF
+    # ===========================
+    st.markdown("---")
+    st.markdown("### 📄 Medical Report for Doctor")
+    st.info("💡 **For Doctor Visits:** Generate a professional PDF report dengan timeline visual untuk dibawa ke dokter!")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        if st.button("📄 Generate Medical Report", type="primary", width="stretch"):
+            with st.spinner("Creating professional medical report..."):
+                try:
+                    # Import generator
+                    from utils.medical_report_generator import generate_medical_referral_pdf
+                    
+                    # Prepare patient data
+                    # Assuming 'selected_lesion' is available from the timeline manager or a similar source
+                    # For now, let's use a placeholder or derive from the first entry if available
+                    selected_lesion = st.session_state.timeline_manager.get_lesion_details(selected_lesion_id)
+                    
+                    patient_data = {
+                        'patient_id': f'Lesion-{selected_lesion["lesion_id"]}',
+                        'body_location': selected_lesion['body_location'].replace('_', ' ').title(),
+                        'symptoms': 'Timeline tracking for skin lesion monitoring'
+                    }
+                    
+                    # Generate PDF in memory (BytesIO - no disk write!)
+                    pdf_bytes = generate_medical_referral_pdf(patient_data, timeline)
+                    
+                    # Show download button (Streamlit magic!)
+                    st.download_button(
+                        label="⬇️ Download PDF untuk Dokter",
+                        data=pdf_bytes,
+                        file_name=f"DermaCheck_Medical_Report_{selected_lesion['lesion_id']}.pdf",
+                        mime="application/pdf",
+                        type="primary",
+                        width="stretch"
+                    )
+                    
+                    st.success("✅ PDF Report generated! Click download button above.")
+                    
+                except Exception as e:
+                    st.error(f"Error generating PDF: {e}")
+                    st.info("Make sure matplotlib is installed: pip install matplotlib")
+    
+    with col2:
+        st.markdown("**Report includes:**")
+        st.write("✅ Timeline photo grid")
+        st.write("✅ Risk score trend")
+        st.write("✅ ABCDE analysis")
+        st.write("✅ Medical disclaimer")
             
             # Alerts
             if comparison['alert']:
