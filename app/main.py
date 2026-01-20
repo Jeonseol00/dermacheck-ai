@@ -327,15 +327,30 @@ def page_new_analysis():
             help="Take a well-lit, focused photo of the lesion. Include a reference object (like a ruler) if possible."
         )
     
+    # Visual photo guidance (elderly-friendly!)
     with col2:
-        st.markdown("### 📋 Tips for Best Results")
-        st.markdown("""
-        - Use good lighting
-        - Keep camera steady
-        - Fill the frame
-        - Include size reference
-        - Avoid shadows
-        """)
+        st.markdown("### 📸 Panduan Foto yang Benar")
+        st.markdown("---")
+        
+        # Good example
+        st.markdown("#### ✅ FOTO YANG BAIK")
+        try:
+            st.image("assets/examples/good_photo.jpg", 
+                    caption="Close-up, Jelas, Detail Terlihat", 
+                    use_container_width=True)
+        except:
+            st.success("✅ **Foto Dekat & Jelas**\n\nClose-up pada lesi, lighting baik, detail terlihat")
+        
+        st.markdown("---")
+        
+        # Bad example
+        st.markdown("#### ❌ FOTO YANG BURUK")
+        try:
+            st.image("assets/examples/bad_photo.jpg", 
+                    caption="Terlalu Jauh, Lesi Tidak Jelas", 
+                    use_container_width=True)
+        except:
+            st.error("❌ **Foto Terlalu Jauh**\n\nLesi terlalu kecil, tidak jelas, sulit dianalisa")
     
     if uploaded_file:
         # Validate image
