@@ -337,7 +337,7 @@ def page_new_analysis():
         try:
             st.image("assets/examples/good_photo.jpg", 
                     caption="Close-up, Jelas, Detail Terlihat", 
-                    use_container_width=True)
+                    width="stretch")
         except:
             st.success("✅ **Foto Dekat & Jelas**\n\nClose-up pada lesi, lighting baik, detail terlihat")
         
@@ -348,7 +348,7 @@ def page_new_analysis():
         try:
             st.image("assets/examples/bad_photo.jpg", 
                     caption="Terlalu Jauh, Lesi Tidak Jelas", 
-                    use_container_width=True)
+                    width="stretch")
         except:
             st.error("❌ **Foto Terlalu Jauh**\n\nLesi terlalu kecil, tidak jelas, sulit dianalisa")
     
@@ -384,7 +384,7 @@ def page_new_analysis():
                 
                 with col_crop2:
                     st.markdown("**Preview Hasil Crop:**")
-                    st.image(cropped_img, use_container_width=True)
+                    st.image(cropped_img, width="stretch")
                     
                     # Use cropped or original?
                     use_crop = st.checkbox("✅ Gunakan Hasil Crop", value=False, 
@@ -402,7 +402,7 @@ def page_new_analysis():
             col1, col2 = st.columns(2)
             
             with col1:
-                st.image(final_image, caption="Foto yang Akan Dianalisa", use_container_width=True)
+                st.image(final_image, caption="Foto yang Akan Dianalisa", width="stretch")
             
             with col2:
                 # Additional context
@@ -429,7 +429,7 @@ def page_new_analysis():
                         st.info("No existing lesions found. This will be saved as a new lesion.")
             
             # Analyze button
-            if st.button("🔍 Analyze Lesion", type="primary", use_container_width=True):
+            if st.button("🔍 Analyze Lesion", type="primary", width="stretch"):
                 with st.spinner("Analyzing lesion... This may take a moment."):
                     perform_analysis(final_image, body_location, existing_lesion_id)
             
@@ -612,7 +612,7 @@ def page_timeline_tracking():
         with col2:
             if os.path.exists(entry['image_path']):
                 img = Image.open(entry['image_path'])
-                st.image(img, use_container_width=True)
+                st.image(img, width="stretch")
         
         with col3:
             risk_color = {"LOW": "🟢", "MEDIUM": "🟡", "HIGH": "🔴"}[entry['risk_level']]
@@ -852,7 +852,7 @@ def page_general_consultation():
                 )
         
         # Analyze button
-        if st.button("📝 Generate Medical Summary", type="primary", use_container_width=True):
+        if st.button("📝 Generate Medical Summary", type="primary", width="stretch"):
             if symptoms_input.strip():
                 with st.spinner("Analyzing symptoms and generating SOAP note... This may take a moment."):
                     patient_context = {}
@@ -1098,7 +1098,7 @@ def display_consultation_results(consultation):
     
     with col2:
         # Generate PDF button
-        if st.button("📄 Download PDF", type="primary", use_container_width=True):
+        if st.button("📄 Download PDF", type="primary", width="stretch"):
             try:
                 from utils.pdf_generator import generate_soap_pdf
                 
@@ -1119,7 +1119,7 @@ def display_consultation_results(consultation):
                     data=pdf_bytes,
                     file_name=filename,
                     mime="application/pdf",
-                    use_container_width=True
+                    width="stretch"
                 )
                 
                 st.success("✅ PDF generated successfully! Click 'Save PDF Report' to download.")
