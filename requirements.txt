@@ -30,3 +30,9 @@ fpdf2>=2.7.0
 
 # Image Cropper (Phase 2)
 streamlit-cropper>=0.2.1
+
+# WhatsApp Bot (Pillar 3)
+twilio>=8.0.0
+flask>=3.0.0
+pyngrok>=6.0.0  # For ngrok tunnel
+requests>=2.31.0  # For image download
