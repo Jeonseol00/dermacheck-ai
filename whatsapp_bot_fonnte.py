@@ -1,0 +1,396 @@
+"""
+DermaCheck AI - WhatsApp Bot (Fonnte Version)
+Powered by Fonnte.com (Unofficial WA Gateway)
+
+FINAL MIGRATION: Twilio → Meta → Fonnte
+Reason: Geo-blocking + Meta verification failures
+Benefits: Indonesian-focused, simple API, no verification hassle
+"""
+from flask import Flask, request, jsonify
+from PIL import Image
+import requests
+from io import BytesIO
+import os
+from dotenv import load_dotenv
+import base64
+
+# REUSE existing analyzers! 100% logic reuse!
+from models.abcde_analyzer import ABCDEAnalyzer
+from models.medgemma_client import MedGemmaClient
+
+load_dotenv()
+
+app = Flask(__name__)
+
+# Initialize analyzers (REUSE!)
+print("🔧 Initializing analyzers...")
+analyzer = ABCDEAnalyzer()
+
+try:
+    medgemma = MedGemmaClient()
+    print("✅ MedGemma client ready")
+except Exception as e:
+    medgemma = None
+    print(f"⚠️ MedGemma unavailable: {e}")
+
+# Fonnte Configuration
+FONNTE_TOKEN = os.getenv('FONNTE_TOKEN')
+
+print("✅ Fonnte WhatsApp Bot initialized!")
+
+
+@app.route("/webhook", methods=['POST'])
+def webhook_handler():
+    """
+    Main webhook handler for Fonnte incoming messages
+    Fonnte sends JSON payload
+    """
+    try:
+        # Fonnte sends JSON data
+        data = request.get_json()
+        
+        if not data:
+            print("⚠️ No data received")
+            return jsonify({'status': 'no data'}), 200
+        
+        print(f"📱 Webhook received: {data}")
+        
+        # Extract message data (Fonnte format)
+        sender = data.get('sender')  # Phone number with country code
+        message = data.get('message', '').strip().lower()
+        message_type = data.get('message_type', 'text')
+        
+        if not sender:
+            return jsonify({'status': 'no sender'}), 200
+        
+        print(f"📩 From: {sender}, Type: {message_type}")
+        
+        # Handle different message types
+        if message_type == 'image' or 'file' in data:
+            # User sent image
+            file_data = data.get('file')
+            if file_data:
+                handle_image_message(file_data, sender, data)
+            else:
+                send_message(sender, "⚠️ Gagal menerima gambar. Silakan kirim ulang.")
+        
+        elif message_type == 'text' or message:
+            # User sent text
+            handle_text_message(message, sender)
+        
+        else:
+            send_message(sender, HELP_MESSAGE)
+        
+        return jsonify({'status': 'success'}), 200
+        
+    except Exception as e:
+        print(f"❌ Webhook error: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+def handle_image_message(file_url, sender, data):
+    """Handle incoming image and perform analysis"""
+    try:
+        print(f"📷 Processing image: {file_url}")
+        
+        # Download image from Fonnte CDN
+        img_response = requests.get(file_url, timeout=30)
+        
+        if img_response.status_code != 200:
+            send_message(sender, "⚠️ Gagal download gambar. Coba kirim ulang ya!")
+            return
+        
+        # Open image
+        image = Image.open(BytesIO(img_response.content))
+        print(f"✅ Image loaded: {image.size}")
+        
+        # Send processing message
+        send_message(sender, "🔍 Sedang menganalisis gambar Anda...\nMohon tunggu 15-30 detik.")
+        
+        # REUSE EXISTING LOGIC!
+        abcde_results = analyzer.analyze(image)
+        
+        # Check if blank detection rejected
+        if abcde_results.get('status') == 'rejected':
+            print("⚠️ Image rejected (blank detection)")
+            reply = format_rejection_reply(abcde_results)
+        else:
+            print(f"✅ Analysis complete: {abcde_results.get('risk_level')}")
+            
+            # Get medgemma interpretation (if available)
+            if medgemma:
+                try:
+                    medgemma_results = medgemma.analyze_skin_lesion(abcde_results)
+                    reply = format_whatsapp_reply(abcde_results, medgemma_results)
+                except Exception as e:
+                    print(f"⚠️ MedGemma error: {e}")
+                    reply = format_simple_reply(abcde_results)
+            else:
+                reply = format_simple_reply(abcde_results)
+        
+        send_message(sender, reply)
+        print("✅ Reply sent!")
+        
+    except Exception as e:
+        print(f"❌ Image handling error: {e}")
+        send_message(
+            sender,
+            f"⚠️ Maaf, terjadi error saat analisis.\n\n"
+            f"Silakan coba lagi dengan foto yang lebih jelas!\n\n"
+            f"Tips:\n"
+            f"• Cahaya terang\n"
+            f"• Fokus jelas\n"
+            f"• Jarak 10-15cm"
+        )
+
+
+def handle_text_message(text, sender):
+    """Handle text commands"""
+    if text in ['hi', 'halo', 'hello', 'help', 'start', 'mulai']:
+        send_message(sender, WELCOME_MESSAGE)
+        print("📨 Sent welcome message")
+    
+    elif text in ['tips', 'panduan', 'cara']:
+        send_message(sender, PHOTO_TIPS)
+        print("📨 Sent photo tips")
+    
+    else:
+        send_message(sender, HELP_MESSAGE)
+        print("📨 Sent help message")
+
+
+def send_message(to_number, message_text):
+    """
+    Send message via Fonnte API
+    Fonnte uses simple HTTP POST
+    """
+    try:
+        url = "https://api.fonnte.com/send"
+        
+        headers = {
+            'Authorization': FONNTE_TOKEN
+        }
+        
+        payload = {
+            'target': to_number,
+            'message': message_text,
+            'countryCode': '62'  # Indonesia
+        }
+        
+        response = requests.post(url, headers=headers, data=payload)
+        
+        if response.status_code == 200:
+            print(f"✅ Message sent to {to_number}")
+        else:
+            print(f"❌ Send failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Send message error: {e}")
+
+
+def format_whatsapp_reply(abcde_results, medgemma_results=None):
+    """Format analysis results for WhatsApp (same format!)"""
+    risk = abcde_results['risk_level']
+    score = abcde_results['total_score']
+    
+    risk_emoji = {
+        'LOW': '🟢',
+        'MEDIUM': '🟡',
+        'HIGH': '🔴'
+    }.get(risk, '⚪')
+    
+    msg = f"""
+╔══════════════════╗
+  HASIL ANALISIS  
+╚══════════════════╝
+
+{risk_emoji} *TINGKAT RISIKO: {risk}*
+Skor: {score}/11
+
+━━━━━━━━━━━━━━━━━━
+
+📊 *DETAIL ABCDE:*
+
+• Asymmetry: {abcde_results['abcde_scores']['asymmetry']}/2
+• Border: {abcde_results['abcde_scores']['border']}/2
+• Color: {abcde_results['abcde_scores']['color']}/2
+• Diameter: {abcde_results['abcde_scores']['diameter']}/2
+• Evolution: {abcde_results['abcde_scores']['evolution']}/3
+
+━━━━━━━━━━━━━━━━━━
+"""
+    
+    if risk == 'HIGH':
+        msg += """
+🚨 *PENTING!*
+
+Segera konsultasi ke dokter kulit dalam 1-2 minggu!
+
+Jangan tunda. Bawa hasil ini saat ke dokter.
+"""
+    elif risk == 'MEDIUM':
+        msg += """
+⚠️ *PERHATIAN*
+
+Sebaiknya periksa ke dokter dalam 1 bulan.
+
+Pantau terus. Kalau ada perubahan, segera ke dokter.
+"""
+    else:
+        msg += """
+✅ *AMAN*
+
+Kemungkinan tidak berbahaya.
+
+Tetap pantau. Kalau berubah, foto lagi ya!
+"""
+    
+    msg += """
+━━━━━━━━━━━━━━━━━━
+
+💬 Kirim "TIPS" untuk panduan foto
+📸 Kirim foto lagi untuk analisis baru
+
+⚠️ *Disclaimer:*
+Ini BUKAN diagnosa medis.
+Selalu konsultasi dokter untuk kepastian.
+
+━━━━━━━━━━━━━━━━━━
+DermaCheck AI v3.0
+Powered by Fonnte.com
+"""
+    return msg.strip()
+
+
+def format_simple_reply(abcde_results):
+    """Simplified reply without MedGemma"""
+    return format_whatsapp_reply(abcde_results, None)
+
+
+def format_rejection_reply(abcde_results):
+    """Reply when blank detection rejects image"""
+    blank_info = abcde_results.get('blank_detection', {})
+    variance = blank_info.get('variance', 0)
+    
+    return f"""
+⚠️ *FOTO KURANG JELAS*
+
+Foto yang Anda kirim terlalu kosong/polos.
+
+Variance: {variance:.1f} (threshold: 500)
+
+📸 *TIPS FOTO YANG BAIK:*
+
+1️⃣ Fokus pada lesi/tahi lalat
+2️⃣ Jarak 10-15 cm
+3️⃣ Cahaya cukup (tidak gelap)
+4️⃣ Lesi terlihat jelas
+5️⃣ Tidak blur/goyang
+
+Silakan kirim foto ulang yang lebih jelas ya! 👍
+
+Ketik "TIPS" untuk panduan lengkap.
+"""
+
+
+WELCOME_MESSAGE = """
+🏥 *Selamat Datang di DermaCheck AI!*
+
+Saya adalah asisten AI untuk analisis awal kondisi kulit Anda.
+
+📸 *CARA PAKAI:*
+
+1. Foto tahi lalat/lesi Anda
+2. Kirim foto ke chat ini
+3. Tunggu hasil (15-30 detik)
+4. Baca saran yang diberikan
+
+⚠️ *PENTING:*
+
+• Ini BUKAN diagnosa medis
+• Selalu konsultasi dokter
+• Hasil hanya referensi awal
+
+💬 Ketik "TIPS" untuk panduan foto
+
+Kirim foto Anda sekarang! 📷
+
+━━━━━━━━━━━━━━━━━━
+Powered by Fonnte.com
+"""
+
+HELP_MESSAGE = """
+📋 *BANTUAN DERMACHECK AI*
+
+Cara menggunakan:
+
+1️⃣ *Kirim Foto*
+   Kirim foto tahi lalat/lesi kulit
+
+2️⃣ *Tunggu Analisis*
+   AI analisis dalam 15-30 detik
+
+3️⃣ *Baca Hasil*
+   Lihat tingkat risiko & saran
+
+💬 *Perintah:*
+
+• HALO - Selamat datang
+• HELP - Bantuan ini
+• TIPS - Panduan foto
+
+📸 Langsung kirim foto untuk mulai!
+"""
+
+PHOTO_TIPS = """
+📸 *TIPS FOTO YANG BAIK*
+
+✅ *YANG BENAR:*
+
+1. Fokus pada lesi (close-up)
+2. Jarak 10-15 cm
+3. Cahaya terang & merata
+4. Lesi di tengah foto
+5. Tidak blur/goyang
+
+❌ *YANG SALAH:*
+
+1. Terlalu jauh
+2. Gelap/bayangan
+3. Blur/tidak fokus
+4. Lesi tidak jelas
+5. Tangan goyang
+
+💡 *BONUS TIPS:*
+
+• Foto di siang hari (cahaya alami)
+• Gunakan lampu tambahan jika perlu
+• Tahan HP stabil saat foto
+• Bersihkan kamera HP
+
+Selamat mencoba! 📷✨
+"""
+
+
+@app.route("/")
+def home():
+    """Health check endpoint"""
+    return """
+    <h1>🏥 DermaCheck AI - Fonnte WhatsApp Bot</h1>
+    <p>✅ Bot is running!</p>
+    <p>📱 Powered by Fonnte.com (Indonesian WhatsApp Gateway)</p>
+    <p>🔗 Webhook: /webhook (POST)</p>
+    <p>🇮🇩 Full Indonesian support - No geo-blocking!</p>
+    """
+
+
+if __name__ == '__main__':
+    print("=" * 50)
+    print("🚀 DermaCheck AI - Fonnte WhatsApp Bot")
+    print("=" * 50)
+    print("📱 Waiting for messages from Fonnte...")
+    print("🌐 Webhook endpoint: http://localhost:5000/webhook")
+    print("✅ Indonesian-focused! No verification needed!")
+    print("=" * 50)
+    
+    app.run(debug=True, port=5000, host='0.0.0.0')
