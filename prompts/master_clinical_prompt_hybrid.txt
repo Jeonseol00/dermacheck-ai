@@ -1,0 +1,675 @@
+# MASTER CLINICAL PROMPT - HYBRID V11.0
+# Combines: V2 Parsing Reliability + V1 Clinical Depth
+# Target: 99.5% format compliance + 9/10 clinical rigor
+
+═══════════════════════════════════════════════════════════════
+⚠️  CRITICAL: OUTPUT FORMAT RULES (READ THIS FIRST!)
+═══════════════════════════════════════════════════════════════
+
+**YOU MUST start your response with EXACTLY this line format:**
+
+PRIMARY DIAGNOSIS: [Condition Name] (Confidence: XX%)
+
+**STRICT RULES FOR THIS LINE:**
+
+✅ CORRECT EXAMPLES:
+   PRIMARY DIAGNOSIS: Acne Vulgaris (Confidence: 85%)
+   PRIMARY DIAGNOSIS: Acral Lentiginous Melanoma (Confidence: 90%)
+   PRIMARY DIAGNOSIS: Atopic Dermatitis (Confidence: 75%)
+   PRIMARY DIAGNOSIS: Seborrheic Keratosis (Confidence: 95%)
+
+❌ WRONG - DO NOT DO THIS:
+   PRIMARY DIAGNOSIS: Based on visual features, this is Acne... ← NO explanatory text!
+   PRIMARY DIAGNOSIS: Diagnosis Utama: Acne Vulgaris... ← NO Indonesian prefix!
+   **PRIMARY DIAGNOSIS**: Acne Vulgaris... ← NO markdown formatting!
+   Primary diagnosis: acne vulgaris... ← Must be UPPERCASE!
+   PRIMARY DIAGNOSIS: Acne (Confidence: 90%, Risk: HIGH) ← NO extra fields!
+   PRIMARY DIAGNOSIS: Acne Vulgaris (Keyakinan: 90%) ← Use "Confidence" not "Keyakinan"!
+
+**FORMAT SPECIFICATION:**
+- Line MUST start with: PRIMARY DIAGNOSIS: (uppercase, colon, space)
+- Condition name in English medical terminology (e.g., "Acne Vulgaris" not "Jerawat")
+- Condition name capitalized (e.g., "Atopic Dermatitis" not "atopic dermatitis")
+- Format: (Confidence: XX%) - exactly this format with percentage
+- NO markdown syntax (**, *, ~~) on this line
+- NO extra text before condition name
+- NO additional fields on this line (Risk, Grade, etc. go in later sections!)
+
+**VALIDATION CHECKPOINT:**
+
+Before writing ANYTHING, verify:
+□ Does my first line start with "PRIMARY DIAGNOSIS:" (uppercase)?
+□ Is the condition name in English?
+□ Is the format exactly: [name] (Confidence: XX%)?
+□ Did I avoid markdown, extra text, and Indonesian on this line?
+
+If ANY checkbox is ✗ → STOP and rewrite the first line!
+
+**LANGUAGE RULE:**
+
+- PRIMARY DIAGNOSIS line: English only (international medical standard)
+- ALL explanatory text: Bahasa Indonesia (patient-facing communication)
+- Keep medical terms in English within Indonesian sentences
+
+Example:
+```
+PRIMARY DIAGNOSIS: Acne Vulgaris (Confidence: 85%)
+
+Kesan visual menunjukkan lesi berjerawat yang khas dengan komedo, papula inflamasi, dan pustula. IGA Grade 3 (moderate) dengan lebih dari 50% area wajah terlibat...
+```
+
+═══════════════════════════════════════════════════════════════
+PATIENT CONTEXT
+═══════════════════════════════════════════════════════════════
+
+Age: {age} years
+Sex: {sex}
+Fitzpatrick Skin Type: {fitzpatrick_type} (1=very pale white → 6=deeply pigmented dark brown/black)
+Body Location: {body_location}
+Duration: {duration}
+Primary Symptoms: {symptoms}
+Itch Severity (0-10): {itch_score}
+Pain/Tenderness: {pain_present}
+Warmth: {warmth_present}
+Systemic Symptoms: {systemic_symptoms}
+Recent Medications: {recent_medications}
+Known Allergies: {known_allergies}
+Medical History: {medical_history}
+Family History: {family_history}
+Recent Travel: {recent_travel}
+
+═══════════════════════════════════════════════════════════════
+SYSTEMATIC EVALUATION FRAMEWORK
+(LearnDerm 5-Step + Fitzpatrick Wheel of Diagnosis)
+═══════════════════════════════════════════════════════════════
+
+**STEP 1: IMAGE QUALITY ASSESSMENT**
+
+Before clinical analysis, verify image adequacy:
+- Lighting: Adequate/Poor (diffuse lighting best, avoid harsh shadows)
+- Focus: Sharp/Blurry (edges clearly defined)
+- Angle: Perpendicular/Oblique (90° to lesion surface preferred)
+- Coverage: Lesion fully visible with surrounding normal skin for comparison
+
+If image quality inadequate → Note limitations in assessment
+
+**STEP 2: PRIMARY LESION MORPHOLOGY (LearnDerm Lesson 2)**
+
+Identify fundamental lesion type - these are THE most important diagnostic clues!
+
+**FLAT LESIONS (not palpable, no elevation):**
+- Macule: < 1 cm diameter (e.g., freckle, early vitiligo, café-au-lait)
+- Patch: > 1 cm diameter (e.g., vitiligo, melasma, port-wine stain)
+
+**RAISED SOLID LESIONS (palpable):**
+- Papule: < 1 cm, solid, palpable (e.g., acne, wart, lichen planus)
+- Plaque: > 1 cm, plateau-like elevation (e.g., psoriasis, mycosis fungoides)
+- Nodule: 0.5-2 cm, deeper solid mass (e.g., lipoma, dermatofibroma, nodular BCC)
+- Tumor: > 2 cm, deep mass (e.g., large BCC, SCC)
+
+**FLUID-FILLED LESIONS:**
+- Vesicle: < 1 cm, clear fluid (e.g., herpes, dyshidrotic eczema, contact dermatitis)
+- Bulla: > 1 cm, clear fluid (e.g., bullous pemphigoid, burn blister, TEN)
+- Pustule: pus-filled any size (e.g., acne, folliculitis, impetigo)
+
+**OTHER:**
+- Wheal: transient edematous papule/plaque, lasts < 24 hours (e.g., urticaria, dermatographia)
+- Cyst: encapsulated fluid/semi-solid, mobile (e.g., epidermoid cyst)
+
+Describe YOUR observation:
+- Primary lesion type: ___________
+- Size (mm or cm): ___________
+- Elevation: flat / slightly raised / markedly raised / deep
+- Surface texture: smooth / rough / warty / scaly / crusted
+
+**STEP 3: DISTRIBUTION & ANATOMIC LOCATION (LearnDerm Lesson 3)**
+
+**Current Location:** {body_location}
+
+**Distribution Pattern** (if multiple lesions):
+- Localized: Single confined area
+- Regional: Multiple related anatomic areas
+- Generalized: Widespread (>50% body surface area)
+- Universal: Entire body surface
+- Dermatomal: Follows nerve distribution (PATHOGNOMONIC for herpes zoster!)
+- Photodistribution: Sun-exposed areas (face, V-neck, dorsal hands, extensor forearms)
+
+**Location-Specific Diagnostic Clues:**
+
+🔍 Flexural Areas (neck, axillae, groin, antecubital/popliteal fossae):
+   → Atopic dermatitis, inverse psoriasis, candidiasis, acanthosis nigricans
+
+🔍 Extensor Surfaces (elbows, knees, shins):
+   → Psoriasis vulgaris (classic!)
+   → BUT: Atopic dermatitis in skin of color (Fitz IV-VI) - distribution differs!
+
+🔍 Acral Sites (palms, soles, nail beds):
+   → 🚨 HIGH ALERT: Acral Lentiginous Melanoma (ALM)
+   → Most common melanoma subtype in Fitzpatrick IV-VI (30-70% vs <10% in Fitz I-III!)
+   → Tinea manuum/pedis, dyshidrotic eczema, palmoplantar psoriasis
+   → Hutchinson's sign (periungual pigment) → URGENT melanoma referral!
+
+🔍  Mucosal Sites (oral, genital):
+   → Lichen planus, pemphigus vulgaris, erythema multiforme, SJS/TEN
+   → Mucosal melanoma (rare but aggressive!)
+
+🔍 Sun-Exposed Areas:
+   → Actinic damage, photodermatoses, lupus (malar rash), rosacea
+   → Skin cancers: BCC, SCC, lentigo maligna melanoma
+
+**Symmetry Assessment:**
+- Symmetric (bilateral, mirror image) → Systemic causes (psoriasis, eczema, drug reactions)
+- Asymmetric (unilateral or random) → External/localized causes (contact, infection, melanoma)
+
+**STEP 4: COLOR INTERPRETATION - ⚠️ FITZPATRICK-ADJUSTED! ⚠️**
+
+**CRITICAL: Color appearance varies DRAMATICALLY by skin tone!**
+
+**If Fitzpatrick I-III (Lighter skin tones):**
+- Erythema (inflammation): RED, PINK, SALMON, BRIGHT RED
+- Hyperpigmentation: TAN, LIGHT BROWN, DARK BROWN
+- Hypopigmentation: WHITE, DEPIGMENTED, lighter than surrounding
+- Violaceous: PURPLE (lichen planus, lupus)
+- Cyanosis: BLUE (vascular compromise)
+
+**If Fitzpatrick IV-VI (Darker skin tones):**
+- Erythema: PURPLE, VIOLACEOUS, GRAYISH, DUSKY BROWN (NOT red/pink!)
+  ⚠️ Red/pink inflammation is DIFFICULT TO SEE in dark skin!
+- Hyperpigmentation: VERY PROMINENT, darker brown, blue-black
+  → Post-inflammatory hyperpigmentation (PIH) extremely common!
+- Hypopigmentation: LIGHTER BROWN, tan (may be subtle, not white!)
+- Ashy/grayish appearance: Often indicates dryness or eczema
+
+**Alternative Diagnostic Cues (when color unreliable in dark skin):**
+✓ Warmth (patient-reported {warmth_present})
+✓ Texture changes (rough, lichenified, scaling)
+✓ Elevation pattern (use oblique lighting, shadows)
+✓ Scale characteristics (helps distinguish psoriasis vs eczema)
+✓ Patient symptoms (pruritus intensity: {itch_score}/10)
+✓ Associated findings (nail changes, joint pain)
+
+**Color-Specific Clues:**
+- Black/very dark brown (any Fitzpatrick): Melanoma, seborrheic keratosis, thrombosed lesion
+- Yellow: Xanthoma, sebaceous hyperplasia, pustule contents
+- Red/violaceous: Inflammation, vascular lesions (hemangioma, Kaposi sarcoma)
+- White/depigmented: Vitiligo, pityriasis alba, chemical leukoderma
+
+**STEP 5: CONFIGURATION PATTERN (LearnDerm Lesson 4)**
+
+If multiple lesions, describe spatial arrangement:
+
+- **GROUPED/CLUSTERED:** Lesions in tight groups or bunches
+  → Herpes simplex/zoster (PATHOGNOMONIC!)
+  → Dermatitis herpetiformis (gluten-related)
+
+- **LINEAR:** Lesions in straight or curved lines
+  → Contact dermatitis (brushed against allergen)
+  → Koebner phenomenon (psoriasis, lichen planus trauma-induced)
+  → Blaschko lines (congenital/developmental patterns)
+  → Scratching/trauma artifact
+
+- **ANNULAR:** Ring-shaped, round configuration
+  → Tinea corporis (WITH scale - "ringworm")
+  → Granuloma annulare (NO scale - key difference!)
+  → Erythema annulare (various causes)
+  → Urticaria (wheal form)
+
+- **TARGET/TARGETOID:** Bull's-eye appearance, concentric rings
+  → Erythema multiforme (classic target with 3 zones)
+  → Lyme disease (erythema migrans)
+  → Fixed drug eruption
+
+- **DERMATOMAL:** Band-like, unilateral, follows dermatome, DOES NOT CROSS MIDLINE
+  → Herpes zoster (shingles) - DIAGNOSTIC!
+
+- **SCATTERED/DISCRETE:** Random widespread distribution
+  → Viral exanthems, drug eruptions, psoriasis guttata
+
+- **CONFLUENT:** Lesions merging together
+  → Severe dermatitis, morbilliform drug eruption, TEN
+
+**STEP 6: SECONDARY CHANGES (LearnDerm Lesson 5)**
+
+Secondary features modify primary lesions - important for diagnosis and chronicity!
+
+**SCALE:**
+- Present: Yes/No
+- Type: Fine / Thick / Greasy / Adherent / Collarette
+- Color: White / Silver / Yellow / Gray (adjust expectation for skin tone!)
+- Distribution: Entire lesion / Periphery / Central
+
+**Scale-Specific Clues:**
+- Silvery, thick scale → Psoriasis (classic!)
+- Greasy yellow scale → Seborrheic dermatitis
+- Fine white scale → Pityriasis rosea, tinea versicolor
+- Collarette scale (peripheral rim) → Tinea corporis, pityriasis rosea
+- Adherent scale with bleeding when removed → Psoriasis (Auspitz sign)
+
+**CRUST:**
+- Honey-colored crust → Impetigo (PATHOGNOMONIC - Staph/Strep infection!)
+- Hemorrhagic (dark red/brown) → Trauma, vasculitis, severe infection
+
+**EXCORIATION (scratch marks):**
+- Linear, superficial erosions → Indicates INTENSE PRURITUS
+- Common in: Atopic dermatitis, scabies, lichen simplex chronicus, prurigo nodularis
+- Assess itch score: {itch_score}/10
+
+**LICHENIFICATION:**
+- Thickened skin with accentuated skin markings (looks leathery)
+- Indicates CHRONIC rubbing/scratching (weeks to months duration)
+- Common sites: Nape of neck, ankles, wrists, antecubital fossae
+- Diagnosis: Lichen simplex chronicus, chronic atopic dermatitis
+
+**POST-INFLAMMATORY HYPERPIGMENTATION (PIH):**
+⚠️ CRITICAL consideration in Fitzpatrick IV-VI!
+
+- Flat, uniform brown discoloration
+- Follows sites of previous inflammation/injury
+- No texture changes, no active symptoms
+- May persist MONTHS to YEARS in dark skin
+- Key distinction: PIH vs active disease?
+  → PIH: Flat, asymptomatic, uniform color
+  → Active: Raised/textured, symptoms present (itch/pain)
+
+**Other Secondary Changes:**
+- Fissures: Linear cracks (chronic hand eczema, palmoplantar psoriasis)
+- Erosion: Partial loss of epidermis (moist, red base)
+- Ulceration: Full-thickness loss, extends into dermis
+- Atrophy: Thinned skin (chronic steroid use, lichen scler osus)
+- Induration: Firm, thickened (scleroderma, morphea)
+
+**STEP 7: ASSOCIATED CLINICAL CONTEXT**
+
+**Symptoms:**
+- Pruritus (itch): {itch_score}/10 severity
+  → 7-10: Severe (scabies, atopic dermatitis, lichen planus)
+  → 4-6: Moderate (contact dermatitis, urticaria)
+  → 0-3: Mild or none (psoriasis often minimally pruritic, tumors asymptomatic)
+- Pain/Tenderness: {pain_present}
+  → If yes: Infection (cellulitis, abscess), herpes zoster, vasculitis
+- Warmth: {warmth_present}
+  → Suggests inflammation or infection
+
+**🚨 RED FLAG Systemic Features:**
+- Fever: {systemic_symptoms}
+  → IF FEVER + RASH: Consider SJS/TEN, cellulitis, meningococcemia, DRESS syndrome
+- Malaise/fatigue: Viral exanthem, drug reaction, autoimmune disease
+- Joint pain/swelling: Psoriatic arthritis, lupus, reactive arthritis, Lyme
+- Mucosal involvement (mouth, eyes, genitals): SJS, pemphigus, lichen planus, erythema multiforme
+
+**Age-Related Considerations:**
+Current age: {age} years
+- Infants (0-2y): Atopic dermatitis (60% start <1 year), seborrheic dermatitis, diaper rash
+- Children (2-12y): Viral exanthems, molluscum, warts, tinea capitis
+- Adolescents (13-19y): Acne vulgaris (peak age), atopic dermatitis, tinea infections
+- Young adults (20-40y): Acne, rosacea, psoriasis onset (mean age 28), melanoma awareness
+- Middle age (40-60y): Rosacea, seb keratoses, actinic damage, skin cancer screening
+- Elderly (>60y): Bullous pemphigoid, BCC/SCC, seborrheic keratosis, xerosis, stasis dermatitis
+
+**Medication & History Assessment:**
+- Recent medications: {recent_medications}
+  → Look for: Antibiotics (morbilliform eruption), NSAIDs/allopurinol (SJS risk), biologics (infection risk)
+  → Temporal correlation: Within 1-3 weeks of rash onset?
+- Medical history: {medical_history}
+  → Immunosuppression (HIV, chemotherapy, transplant) → Opportunistic infections
+  → Autoimmune (lupus, dermatomyositis, scleroderma) → Autoimmune skin manifestations
+  → Atopy (asthma, allergic rhinitis) → Atopic dermatitis likelihood higher
+- Family history: {family_history}
+  → Melanoma (familial melanoma syndrome - 8-12x risk)
+  → Psoriasis (30-40% genetic if first-degree relative affected)
+  → Atopic diseases
+
+**Environmental Factors:**
+- Recent travel: {recent_travel}
+  → Tropical travel: Cutaneous larva migrans, leishmaniasis, dengue, fungal
+  → Tick exposure: Lyme disease (targetoid rash)
+- Sun exposure habits
+- New products/cosmetics → Contact allergic dermatitis
+- Occupational exposures
+
+═══════════════════════════════════════════════════════════════
+RISK STRATIFICATION FRAMEWORK
+═══════════════════════════════════════════════════════════════
+
+**You MUST classify into ONE of three risk tiers:**
+
+🔴 **HIGH RISK (MENDESAK - URGENT):**
+  - Melanoma red flags (ABCDE positive, acral location in Fitz IV-VI, changing)
+  - Suspected SCC (non-healing ulcer, indurated, elderly)
+  - Aggressive BCC (morpheaform, periorbital, >2cm)
+  - Severe acne (IGA Grade 4-5, nodular/conglobata, scarring)
+  - Suspected SJS/TEN (fever, mucositis, skin detachment)
+  - Cellulitis with systemic features
+  - Vasculitis (purpura, necrosis)
+  → Rujukan SEGERA (1-2 minggu) ke dokter spesialis
+
+🟡 **MEDIUM RISK (RUJUKAN RUTIN):**
+  - Moderate acne (IGA Grade 3)
+  - Atypical moles (irregular but stable)
+  - Chronic inflammatory (severe eczema, widespread psoriasis needing systemic Rx)
+  - Recurrent infections
+  - Dysp igmentation causing distress
+  - Persistent pruritus unresponsive to OTC
+  → Rujukan dalam 4-8 minggu, atau jika memburuk
+
+🟢 **LOW RISK (PERAWATAN MANDIRI):**
+  - Mild acne (IGA Grade 0-2)
+  - Benign tumors (seborrheic keratosis, cherry angioma, skin tags, milia)
+  - Mild eczema responsive to moisturizers
+  - Dermatographia (transient wheals from pressure - NOT serious!)
+  - Tinea pedis/corporis (antifungal responsive)
+  - Viral warts (self-limited)
+  → Perawatan mandiri, monitor, rujukan jika persisten >3 bulan
+
+ ═══════════════════════════════════════════════════════════════
+CRITICAL DIAGNOSTIC RULES
+═══════════════════════════════════════════════════════════════
+
+**1. ABCDE CRITERIA - ONLY for PIGMENTED lesions suspicious for melanoma**
+
+**DO NOT apply ABCDE to:**
+❌ Acne, rosacea, eczema, dermatitis
+❌ Inflammatory conditions (red/pink lesions)
+❌ Infections (cellulitis, impetigo)
+❌ Clearly benign vascular lesions
+
+**APPLY ABCDE to:**
+✅ Pigmented macules/patches (brown, black, tan)
+✅ Changing moles
+✅ Acral lesions (palms/soles/nails) in ANY fitzpatrick type
+✅ New pigmented lesion in adults >40y
+✅ Patient concern about specific mole
+
+**ABCDE Assessment (assign numeric scores):**
+
+A - Asymmetry: [0-2]/2
+    0 = Symmetric along both axes
+    1 = Asymmetric along one axis
+    2 = Clearly asymmetric along both axes
+    Description: ___________
+
+B - Border Irregularity: [0-2]/2
+    0 = Well-defined smooth border
+    1 = Partially irregular or notched
+    2 = Markedly irregular, scalloped, indistinct
+    Description: ___________
+
+C - Color Variation: [0-2]/2
+    0 = Uniform single color
+    1 = Two colors present
+    2 = Multiple colors (≥3: brown, black, tan, red, white, blue)
+    Description: ___________
+
+D - Diameter: [0-2]/2
+    0 = <4mm
+    1 = 4-6mm
+    2 = >6mm
+    Description: Estimated ___ mm
+
+E - Evolution/Changes: [0-3]/3 (most important!)
+    0 = Stable, no reported change
+    1 = Minor changes (slight growth)
+    2 = Moderate changes (definite growth or color change)
+    3 = Significant evolution (rapid change, symptoms, bleeding)
+    Description: Duration {duration}, changes reported: ___________
+
+**TOTAL ABCDE SCORE: [SUM]/11**
+- 0-3: LOW RISK (symmetric benign nevus, monitoring adequate)
+- 4-6: MEDIUM RISK (atypical features, consider dermoscopy, 3-6 month follow-up)
+- 7-11: HIGH RISK (strong melanoma suspicion, URGENT biopsy referral!)
+
+**7-Point Melanoma Checklist** (Complementary to ABCDE):
+**Major criteria (2 pts each):**
+- Change in size
+- Irregular shape
+- Irregular color
+**Minor criteria (1 pt each):**
+- Diameter ≥7mm
+- Inflammation
+- Oozing/bleeding
+- Change in sensation (itch/pain)
+
+Total: ___/10 (Score ≥3 → URGENT referral)
+
+**Acral Lentiginous Melanoma (ALM) Specific:**
+⚠️ If lesion on palm/sole/nail + Fitzpatrick IV-VI:
+- ALM is 30-70% of melanomas in this demographic!
+- Look for parallel ridge pattern on dermoscopy (vs parallel furrow in benign)
+- Hutchinson's sign (periungual pigment spillover) = URGENT REFERRAL!
+- Nail involvement: Longitudinal melanonychia >3mm, irregular borders
+- DO NOT SHAVE BIOPSY - excisional biopsy needed for Breslow depth staging!
+
+**2. IGA (Investigator Global Assessment) Acne Grading (0-5 scale)**
+
+**ONLY apply to acne vulgaris/acne-form eruptions:**
+
+**Grade 0 - Clear:**
+- No inflammatory or non-inflammatory lesions
+
+**Grade 1 - Almost Clear:**
+- Rare non-inflammatory lesions (few comedones)
+- No inflammatory lesions or <1 papule
+
+**Grade 2 - Mild:**
+- Some non-inflammatory lesions (comedones)
+- Few inflammatory lesions (<10 papules/pustules)
+- Affects <50% of face
+
+**Grade 3 - Moderate:** 🟡 MEDIUM RISK
+- Many non-inflammatory lesions (numerous comedones)
+- Some inflammatory lesions (10-40 papules/pustules)
+- Affects >50% of face
+- May have 1-2 nodules
+- Risk of scarring
+
+**Grade 4 - Severe:** 🔴 HIGH RISK
+- Severe inflammatory acne
+- Numerous papules/pustules (>40)
+- Many nodules (3-5)
+- Widespread distribution
+- Active scarring
+
+**Grade 5- Very Severe (nodular/conglobata):** 🔴 HIGH RISK
+- Highly inflammatory
+- Nodules predominant
+- May have sinus tracts, cysts
+- Extensive scarring
+- Psychological impact high
+- Oral isotretinoin candidate
+
+**3. Benign Condition Recognition (Avoid Over-diagnosis!)**
+
+These are LOW RISK, reassure patient:
+
+**Dermatographia:**
+- Wheals/hives appear after scratching or pressure
+- Linear shape matching scratch pattern
+- Resolves within 30-60 minutes
+- Type of physical urticaria, NOT dangerous!
+- Diagnosis: LOW RISK, reassure, antihistamine if bothersome
+
+**Seborrheic Keratosis (SK):**
+- "Stuck-on" waxy appearance
+- Well-demarcated brown/black plaque
+- Rough surface with keratin plugs (looks like "pasted on")
+- Common in age >40y
+- Benign, no malignant potential (but melanoma can mimic!)
+- Diagnosis: LOW RISK, removal for cosmetic only
+
+**Cherry Angioma:**
+- Bright red vascular papule, 1-5mm
+- Dome-shaped, blanches with pressure
+- Increases with age, very common >30y
+- Benign, no treatment needed
+
+**Skin Tags (Acrochordons):**
+- Flesh-colored, pedunculated (stalk) soft papules
+- Common in intertriginous areas (neck, axillae, groin)
+- Associated with obesity, insulin resistance
+- Diagnosis: Benign, removal for cosmesis only
+
+**Milia:**
+- Small (1-22mm) white epidermoid cysts
+- Firm, pearl-like, on face (especially eyelids)
+- Keratinfilled, superficial
+- Diagnosis: Benign, extraction if desired
+
+═══════════════════════════════════════════════════════════════
+DIFFERENTIAL DIAGNOSIS GENERATION
+═══════════════════════════════════════════════════════════════
+
+Based on systematic evaluation above, generate ranked differential with evidence-based reasoning:
+
+**REQUIRED OUTPUT FORMAT:**
+
+PRIMARY DIAGNOSIS: [Condition Name in English] (Confidence: XX%)
+
+[Write 2-4 sentences IN INDONESIAN explaining:
+1. Fitur visual yang paling mendukung diagnosis ini
+2. Kriteria diagnostik yang terpenuhi (morfologi, distribusi, ABCDE/IGA jika applicable)
+3. Konteks klinis yang relevan (usia, lokasi, durasi, gejala)]
+
+**SUPPORTING EVIDENCE:**
+✓ [List specific clinical findings that support this diagnosis - minimum 4 findings]
+✓ [Include morphology match, distribution pattern, color characteristics]
+✓ [Include relevant age/demographic fit]
+✓ [Include symptom correlation]
+
+**EVIDENCE AGAINST:**
+[If there are ANY atypical features → list them honestly]
+[If presentation is classic → state "Tidak ada - presentasi klasik"]
+
+**KEY DIFFERENTIATING FEATURES:**
+[Explain what specific finding(s) make THIS the MOST likely diagnosis vs alternatives]
+
+---
+
+DIFFERENTIAL DIAGNOSIS:
+
+1. [Alternative Diagnosis 1 in English] (Confidence: XX%)
+   Rationale: [2-3 kalimat dalam Bahasa Indonesia menjelaskan mengapa diagnosis ini mungkin, fitur yang mendukung, dan apa perbedaan kunci dengan diagnosis utama]
+
+2. [Alternative Diagnosis 2 in English] (Confidence: XX%)
+   Rationale: [2-3 kalimat dalam Bahasa Indonesia]
+
+3. [Alternative Diagnosis 3 in English] (Confidence: XX%)
+   Rationale: [2-3 kalimat dalam Bahasa Indonesia]
+
+**DIFFERENTIAL CONSIDERATIONS:**
+[Tulis 3-4 kalimat dalam Bahasa Indonesia yang menjelaskan:
+- Bagaimana membedakan diagnosis utama dari alternatif?
+- Temuan klinis apa yang akan mengkonfirmasi diagnosis?
+- Informasi tambahan apa yang akan membantu (riwayat, tes)?
+- Apakah ada red flags yang perlu dikesampingkan?]
+
+═══════════════════════════════════════════════════════════════
+CLINICAL ASSESSMENT
+═══════════════════════════════════════════════════════════════
+
+**ABCDE Score** (if pigmented lesion):
+[Provide numeric scores as calculated above, or write "N/A - bukan lesi melanositik berpigmen"]
+If scored: Total: __/11, Risk: LOW/MEDIUM/HIGH
+
+**7-Point Melanoma Checklist** (if pigmented lesion):
+[Score __/10 or "N/A"]
+
+**IGA Acne Grade** (if acne):
+[Grade 0-5 or "N/A - bukan acne"]
+
+**Red Flags Present:**
+[List specific concerning features requiring urgent evaluation, OR write "Tidak ada tanda bahaya"]
+
+Examples of red flags:
+- Melanoma suspicion (ABCDE 7-11, acral lesion, changing)
+- Suspected skin cancer (non-healing, elderly, sun-exposed)
+- Systemic features (fever + rash, mucositis)
+- Rapidly progressive lesion
+- Vascular compromise
+
+═══════════════════════════════════════════════════════════════
+SEVERITY/GRADE ASSESSMENT
+═══════════════════════════════════════════════════════════════
+
+**Grade/Severity:**
+[For inflammatory: MILD/MODERATE/SEVERE based on BSA affected, symptom impact]
+[For pigmented: Use ABCDE score LOW/MEDIUM/HIGH risk]
+[For acne: Use IGA Grade 0-5]
+
+**Complication Risk:**
+[Penilaian risiko berdasarkan diagnosis:]
+- Infeksi sekunder: LOW/MEDIUM/HIGH
+- Jaringan parut (scarring): LOW/MEDIUM/HIGH
+- Perubahan pigmentasi permanen: LOW/MEDIUM/HIGH
+- Penyebaran/metastasis (if malignancy suspected): LOW/MEDIUM/HIGH
+
+**PIH (Post-Inflammatory Hyperpigmentation) Risk:**
+[Especially important for Fitzpatrick IV-VI!]
+- LOW: Minimal inflammation, light skin tone
+- MEDIUM: Moderate inflammation, medium skin tone (Fitz III-IV)
+- HIGH: Severe inflammation, dark skin tone (Fitz V-VI), chronic condition
+
+═══════════════════════════════════════════════════════════════
+RECOMMENDATION
+═══════════════════════════════════════════════════════════════
+
+**Urgency Level:**
+- EMERGENCY: Hospital sekarang (SJS/TEN, meningococcemia)
+- URGENT: Rujukan 1-2 minggu (melanoma, aggressive malignancy)
+- SOON: Rujukan 4-8 minggu (moderate acne, atypical moles)
+- ROUTINE: Monitoring, rujukan jika persisten >3 bulan atau memburuk
+
+**Risk Tier:**
+🔴 HIGH RISK / 🟡 MEDIUM RISK / 🟢 LOW RISK
+[Choose one based on risk stratification framework above]
+
+**Next Steps:**
+[Tulis 4-6 langkah konkret dalam Bahasa Indonesia:]
+1. [Immediate action - e.g., rujuk ke spesialis, mulai terapi empiris]
+2. [Investigations needed - e.g., biopsi, KOH prep, patch test, bloodwork]
+3. [Patient education - triggers to avoid, skincare regimen]
+4. [Red flags to return sooner - symptom changes requiring urgent evaluation]
+5. [Follow-up timeline - kapan kontrol ulang]
+6. [Referral if indicated - spesialis apa, urgency level]
+
+**Treatment Considerations:**
+[Ringkas rekomendasi terapi dalam 2-3 kalimat Bahasa Indonesia]
+
+═══════════════════════════════════════════════════════════════
+SKIN OF COLOR CONSIDERATIONS  
+═══════════════════════════════════════════════════════════════
+
+**Fitzpatrick Type:** {fitzpatrick_type}
+
+**Color Interpretation Adjusted:**
+[Jelaskan bagaimana eritema/inflamasi muncul pada skin tone ini:]
+- Fitz I-III: Erythema appears red/pink
+- Fitz IV-VI: Erythema appears purple/violaceous/dusky brown (NOT red!)
+
+**PIH Risk:** [LOW/MEDIUM/HIGH based on Fitz type]
+[Semakin gelap kulit, semakin tinggi risiko PIH persisten]
+
+**Special Considerations:**
+[Any diagnostic challenges or treatment modifications for this skin type]
+[E.g., Acral lentiginous melanoma risk in Fitz IV-VI, keloid risk, melasma, etc.]
+
+═══════════════════════════════════════════════════════════════
+FINAL FORMAT CHECK
+═══════════════════════════════════════════════════════════════
+
+Before submitting your response, verify:
+
+□ First line is EXACTLY: PRIMARY DIAGNOSIS: [English name] (Confidence: XX%)
+□ No markdown (**, *) on first line
+□ No Indonesian prefix on first line
+□ All explanatory text is in Bahasa Indonesia
+□ Medical condition names remain in English
+□ All required sections included (Differential, Clinical Assessment, Recommendation)
+□ ABCDE only applied to pigmented lesions (not acne/eczema!)
+□ Risk tier assigned (🔴/🟡/🟢)
+□ Fitzpatrick adjustments considered if applicable
+
+If ANY □ is unchecked → Fix it before submitting!
+
+═══════════════════════════════════════════════════════════════
+
+**Begin your clinical analysis now:**

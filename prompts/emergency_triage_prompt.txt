@@ -1,0 +1,236 @@
+EMERGENCY TRIAGE PROTOCOL (Red Flag Detection)
+Use when patient has rash + systemic symptoms OR rapidly progressive condition.
+
+═══════════════════════════════════════════
+RAPID TRIAGE ASSESSMENT
+═══════════════════════════════════════════
+
+Age: {age}
+Rash Duration: {duration}
+Progression: Stable / Slowly worsening / RAPIDLY worsening (hours-days)
+
+SYSTEMIC SYMPTOMS (⚠️ RED FLAGS):
+- Fever: {fever_temp}
+- Chills/rigors: {chills}
+- Malaise/fatigue: {malaise}
+- Headache: {headache}
+- Neck stiffness: {neck_stiffness}
+- Altered mental status: {confusion}
+- Difficulty breathing: {dyspnea}
+- Difficulty swallowing: {dysphagia}
+- Severe pain (disproportionate to appearance): {severe_pain}
+
+MEDICATION HISTORY:
+Recent new medications (last 1-3 weeks): {recent_meds}
+
+MUCOSAL INVOLVEMENT:
+- Oral blisters/erosions: {oral_lesions}
+- Ocular (eye) involvement: {eye_involvement}
+- Genital lesions: {genital_lesions}
+
+SKIN CHANGES:
+- Blistering: {blistering}
+- Skin peeling/detachment: {skin_detachment}
+- Purpura (non-blanching purple spots): {purpura}
+- Widespread erythema: {% body_surface_area}%
+
+═══════════════════════════════════════════
+LIFE-THREATENING CONDITIONS TO RULE OUT
+═══════════════════════════════════════════
+
+🚨 STEVENS-JOHNSON SYNDROME (SJS) / TOXIC EPIDERMAL NECROLYSIS (TEN)
+
+Suspect if:
+✓ Recent medication (antibiotics, anticonvulsants, allopurinol, NSAIDs)
+✓ Fever + malaise
+✓ Mucosal involvement (oral, ocular, genital) - HALLMARK!
+✓ Targetoid or dusky lesions
+✓ Skin detachment (Nikolsky sign - skin sloughs with gentle pressure)
+✓ Body surface area:
+  - SJS: < 10% detachment
+  - SJS-TEN overlap: 10-30%
+  - TEN: > 30%
+
+URGENCY: ⚠️⚠️⚠️ EMERGENCY - IMMEDIATE HOSPITALIZATION (ICU)
+
+Management:
+- STOP suspected medication immediately
+- Emergency department transfer
+- ICU admission (treat like severe burn)
+- Supportive care (fluids, wound care, ophthalmology consult)
+- Mortality: SJS 1-5%, TEN 25-35%
+
+---
+
+🚨 MENINGOCOCCEMIA (Bacterial Meningitis with Sepsis)
+
+Suspect if:
+✓ Petechiae or purpura (non-blanching!)
+✓ Fever
+✓ Headache
+✓ Neck stiffness (meningismus)
+✓ Photophobia
+✓ Rapidly progressive (hours!)
+✓ Altered mental status / lethargy
+
+URGENCY: ⚠️⚠️⚠️ EMERGENCY - IMMEDIATE ED (LIFE-THREATENING!)
+
+Management:
+- IMMEDIATE emergency department
+- IV antibiotics (ceftriaxone) within 1 hour
+- Droplet precautions (contagious!)
+- Mortality: Up to 15% even with treatment
+
+---
+
+🚨 NECROTIZING FASCIITIS ("Flesh-eating bacteria")
+
+Suspect if:
+✓ Severe pain OUT OF PROPORTION to skin appearance
+✓ Edema/swelling beyond area of erythema
+✓ Bullae (blisters) or skin necrosis
+✓ Crepitus (crackling sensation from gas in tissue)
+✓ Rapidly progressive (hours!)
+✓ Systemic toxicity (fever, hypotension, tachycardia)
+✓ Risk factors: Diabetes, immunosuppression, recent trauma/surgery
+
+URGENCY: ⚠️⚠️⚠️ EMERGENCY - SURGICAL EMERGENCY!
+
+Management:
+- IMMEDIATE emergency department
+- URGENT surgical debridement (within 6 hours!)
+- Broad-spectrum IV antibiotics
+- ICU admission
+- Mortality: 20-40% (delay = death)
+
+---
+
+🚨 DISSEMINATED GONOCOCCAL INFECTION (DGI)
+
+Suspect if:
+✓ Pustules on extremities (hands, feet)
+✓ Migratory polyarthralgia (joint pain moving around)
+✓ Tenosynovitis (tendon sheath inflammation)
+✓ Fever
+✓ Recent sexual activity / STI risk factors
+
+URGENCY: ⚠️ URGENT - Same day evaluation
+
+Management:
+- Urgent medical evaluation
+- IV ceftriaxone
+- Test/treat for other STIs
+
+---
+
+🚨 ROCKY MOUNTAIN SPOTTED FEVER (RMSF)
+
+Suspect if:
+✓ Petechial rash starting on wrists/ankles, spreading centrally
+✓ Fever
+✓ Headache
+✓ Tick exposure (2-14 days ago)
+✓ Travel to endemic area
+
+URGENCY: ⚠️⚠️ EMERGENCY (if suspected - high mortality if untreated!)
+
+Management:
+- Immediate doxycycline (don't wait for confirmation!)
+- Hospitalization if severe
+- Mortality: 5-10% treated, up to 30% untreated
+
+---
+
+🚨 DRUG REACTION WITH EOSINOPHILIA AND SYSTEMIC SYMPTOMS (DRESS)
+
+Suspect if:
+✓ Recent medication (2-8 weeks ago): Anticonvulsants, allopurinol, antibiotics
+✓ Fever
+✓ Facial edema
+✓ Lymphadenopathy (swollen lymph nodes)
+✓ Widespread morbilliform (measles-like) rash
+✓ Internal organ involvement (hepatitis, nephritis)
+✓ Eosinophilia (if labs available)
+
+URGENCY: ⚠️⚠️ URGENT HOSPITALIZATION
+
+Management:
+- STOP offending medication
+- Hospital admission (monitor liver, kidneys)
+- Systemic corticosteroids
+- Can be life-threatening (liver failure, myocarditis)
+
+═══════════════════════════════════════════
+TRIAGE DECISION TREE
+═══════════════════════════════════════════
+
+IF ANY of the following → 🚨 CALL 911 / GO TO ED IMMEDIATELY:
+
+✓ Fever + rash + altered mental status
+✓ Fever + rash + neck stiffness
+✓ Non-blanching purpura/petechiae (push on rash, doesn't fade)
+✓ Skin peeling/blistering + mucosal involvement
+✓ Severe pain disproportionate to appearance
+✓ Difficulty breathing or swallowing
+✓ Signs of shock (low BP, rapid heart rate, confusion)
+✓ Rapidly progressive over hours
+
+---
+
+IF ANY of the following → ⚠️ URGENT SAME-DAY EVALUATION:
+
+✓ Fever + any rash
+✓ Recent medication + new rash
+✓ Expanding erythema (cellulitis)
+✓ Blistering
+✓ Joint pain + rash
+✓ Systemic symptoms
+
+---
+
+ROUTINE EVALUATION (Next 1-2 days):
+
+✓ Rash alone, no systemic symptoms
+✓ Stable, not rapidly progressive
+✓ No medication changes
+✓ No mucosal involvement
+
+═══════════════════════════════════════════
+CRITICAL SAFETY REMINDERS
+═══════════════════════════════════════════
+
+1. **FEVER + RASH = URGENT** until proven otherwise
+
+2. **PETECHIAE/PURPURA + FEVER = MENINGOCOCCEMIA** until proven otherwise
+   → THIS IS A MEDICAL EMERGENCY!
+
+3. **MUCOSAL INVOLVEMENT + SKIN BLISTERS = SJS/TEN** until proven otherwise
+   → STOP ALL MEDICATIONS, GO TO HOSPITAL
+
+4. **SEVERE PAIN > APPEARANCE = NECROTIZING FASCIITIS** until proven otherwise
+   → SURGICAL EMERGENCY!
+
+5. When in doubt, OVER-TRIAGE
+   Better to send someone to ED unnecessarily than miss life-threatening condition
+
+═══════════════════════════════════════════
+OUTPUT
+═══════════════════════════════════════════
+
+URGENCY LEVEL: [ROUTINE / URGENT SAME DAY / EMERGENCY - ED NOW]
+
+SUSPECTED CONDITION:
+1. _____________________
+2. _____________________
+
+RED FLAGS PRESENT:
+[List specific red flags identified]
+
+IMMEDIATE ACTION REQUIRED:
+_____________________
+
+TIME-SENSITIVE CONSIDERATIONS:
+_____________________
+
+⚠️ IF PATIENT HAS ANY OF THE FOLLOWING, ADVISE IMMEDIATE 911/ED:
+- [List specific emergency criteria met]

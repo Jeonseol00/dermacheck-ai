@@ -1,245 +1,324 @@
-# DermaCheck AI - Kaggle Deployment Notebook
-**MedGemma Local Inference on T4 GPU**
+# 🚀 Kaggle Deployment Guide - DermaCheck AI with Confidence Scores
 
-This notebook runs DermaCheck AI Telegram bot using local MedGemma model (HAI-DEF compliant).
+## 📋 Prerequisites
 
----
-
-## Setup Instructions
-
-### Prerequisites
-1. **HuggingFace Access**:
-   - Go to: https://huggingface.co/google/medgemma-4b-it
-   - Click "Request Access"
-   - Accept HAI-DEF terms
-   - Get HF token from: https://huggingface.co/settings/tokens
-
-2. **Kaggle Secrets** (Add-ons → Secrets):
-   - `TELEGRAM_BOT_TOKEN`: Your bot token from @BotFather
-   - `HF_TOKEN`: Your HuggingFace access token
-   - `NGROK_TOKEN`: Your ngrok auth token (from ngrok.com)
-
-3. **Kaggle Settings**:
-   - **Accelerator**: GPU T4
-   - **Internet**: ON
-   - **Persistence**: OFF (stateless bot)
+1. **Kaggle Account** with verified phone number
+2. **HuggingFace Account** untuk akses MedGemma
+3. **HuggingFace Token** dengan read access
+4. **Test images** (dermatology photos) untuk testing
 
 ---
 
-## Cell 1: Install Dependencies
+## 🔧 Setup Steps
 
-```python
-# Install required packages
-!pip install -q python-telegram-bot transformers torch torchvision
-!pip install -q bitsandbytes accelerate sentencepiece protobuf
-!pip install -q pyngrok python-dotenv Pillow
+### Step 1: Create HuggingFace Token
 
-print("✅ All dependencies installed!")
+1. Buka https://huggingface.co/settings/tokens
+2. Click **"New token"**
+3. Name: `kaggle-medgemma`
+4. Type: **Read**
+5. Copy token (simpan baik-baik!)
+
+### Step 2: Request MedGemma Access
+
+1. Buka https://huggingface.co/google/medgemma-1.5-4b-it
+2. Click **"Agree and access repository"**
+3. Accept license terms
+4. Tunggu approval (~instant)
+
+### Step 3: Add Token to Kaggle Secrets
+
+1. Buka Kaggle Notebook
+2. Klik **Settings** (⚙️) di sidebar kanan
+3. Scroll ke **Secrets** section
+4. Click **"+ Add a new secret"**
+5. Label: `HF_TOKEN`
+6. Value: paste HuggingFace token Anda
+7. Click **Add**
+
+### Step 4: Enable Kaggle GPU
+
+1. Di Kaggle Notebook, klik **Settings** → **Accelerator**
+2. Pilih **GPU T4 x2** (atau **GPU P100** jika available)
+3. Internet: **ON** (penting!)
+
+---
+
+## 📝 Kaggle Notebook Structure
+
+Berikut urutan cell yang harus Anda copy-paste:
+
+```
+┌─────────────────────────────────────────────────────┐
+│ CELL 1: Install Dependencies                        │
+│ ⏱️ Runtime: ~2 minutes                              │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│ CELL 2: Load MedGemma 1.5 4B                       │
+│ ⏱️ Runtime: ~3-4 minutes                            │
+│ 💾 VRAM: ~8-9 GB (4-bit quantization)              │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│ CELL 3: Confidence Score Components                │
+│ ⏱️ Runtime: <1 second                               │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│ CELL 4: MedGemma Client                            │
+│ ⏱️ Runtime: <1 second                               │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│ CELL 5: Test Confidence Extraction                 │
+│ ⏱️ Runtime: <1 second                               │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│ CELL 6: Gradio App Launch                          │
+│ ⏱️ Runtime: ~5 seconds                              │
+│ 🌐 Output: Public Gradio link                       │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Cell 2: Clone Repository
+## 🎯 Quick Start - Copy This to Kaggle
 
-```python
-import os
+**Option A: Manual Cell-by-Cell** (RECOMMENDED)
+1. Buka file `kaggle_confidence_score_notebook.py` yang baru saja dibuat
+2. Copy CELL 1, paste ke Kaggle notebook cell, run
+3. Wait sampai selesai (✅ muncul)
+4. Ulangi untuk CELL 2, 3, 4, 5, 6
 
-# Clone your GitHub repository
-REPO_URL = "https://github.com/YOUR_USERNAME/dermacheck-ai.git"  # ← UPDATE THIS
+**Option B: Copy Entire File**
+1. Copy seluruh isi `kaggle_confidence_score_notebook.py`
+2. Create new Kaggle notebook
+3. Paste SEMUA code ke satu cell
+4. Run cell
+5. ⚠️ Ini akan run semua sekaligus - lebih cepat tapi sulit debug jika error
 
-!git clone {REPO_URL}
-%cd dermacheck-ai
+---
 
-print(f"✅ Repository cloned: {os.getcwd()}")
-!ls -la
+## ✅ Verification Checklist
+
+Setelah run semua cells, verify:
+
+### After Cell 1 (Install)
+```
+✅ Transformers: 4.50.0+
+✅ Gradio: 4.0.0+
+✅ PyTorch: 2.x
+✅ CUDA Available: True
+✅ GPU: Tesla T4
+```
+
+### After Cell 2 (Load Model)
+```
+✅ MedGemma 1.5 4B loaded successfully!
+✅ Model device: cuda:0
+✅ VRAM allocated: ~8-9 GB
+✅ VRAM reserved: ~9-10 GB
+```
+
+### After Cell 5 (Test)
+```
+PARSED RESULTS:
+✅ Primary: Acne Vulgaris (78%)
+✅ Differentials: 3 found
+✅ Red Flags: 2 detected
+✅ Urgency: ROUTINE
+✅ HTML Generated: ~7000+ characters
+```
+
+### After Cell 6 (Gradio)
+```
+Running on public URL: https://xxxxx.gradio.live
 ```
 
 ---
 
-## Cell 3: Setup Secrets & Environment
+## 🧪 Testing the App
 
-```python
-from kaggle_secrets import UserSecretsClient
-import os
+### Test 1: Upload Sample Image
 
-# Initialize secrets client
-user_secrets = UserSecretsClient()
+1. Open Gradio link (https://xxxxx.gradio.live)
+2. Upload test dermatology image
+3. Body location: pilih lokasi (e.g., "Face")
+4. Symptom history: tulis gejala (e.g., "Red itchy bumps for 3 days")
+5. Click **"🔬 Analyze with Confidence Scores"**
 
-# Load secrets
-try:
-    os.environ['TELEGRAM_BOT_TOKEN'] = user_secrets.get_secret("TELEGRAM_BOT_TOKEN")
-    os.environ['HF_TOKEN'] = user_secrets.get_secret("HF_TOKEN")
-    os.environ['NGROK_TOKEN'] = user_secrets.get_secret("NGROK_TOKEN")
-    
-    print("✅ All secrets loaded successfully!")
-    print(f"📱 Telegram token: {os.environ['TELEGRAM_BOT_TOKEN'][:20]}...")
-    print(f"🤗 HF token: {os.environ['HF_TOKEN'][:20]}...")
-    
-except Exception as e:
-    print(f"❌ Failed to load secrets: {e}")
-    print("Please add secrets in Kaggle: Add-ons → Secrets")
+**Expected output (3-5 seconds)**:
+- ✅ Confidence visualization dengan progress bars
+- ✅ Primary diagnosis dengan purple border
+- ✅ 3-4 differential diagnoses
+- ✅ Red flags (jika ada)
+- ✅ Recommendation dengan urgency level
+
+### Test 2: Verify Confidence Scores
+
+Check:
+- ✅ Progress bars menampilkan warna yang benar:
+  - Blue (60-79%)
+  - Orange (40-59%)
+  - Red (<40%)
+  - Green (80-100%)
+- ✅ Percentages terlihat jelas
+- ✅ Rationale ter-display di bawah setiap differential
+
+### Test 3: Check Performance
+
+Buka **"⚙️ Performance Metrics"** accordion:
+```
+✅ Processing Time: 3000-5000 ms (normal)
+✅ Model: MedGemma 1.5 4B
+✅ Quantization: 4-bit NF4
+✅ Primary Confidence: xx%
+✅ Diagnoses Analyzed: 4
 ```
 
 ---
 
-## Cell 4: Authenticate HuggingFace
+## 🎨 Expected UI Look
 
-```python
-from huggingface_hub import login
+**Confidence Visualization Output:**
 
-# Login to HuggingFace to access MedGemma
-HF_TOKEN = os.environ.get('HF_TOKEN')
-
-if HF_TOKEN:
-    login(token=HF_TOKEN)
-    print("✅ HuggingFace authentication successful!")
-else:
-    print("❌ HF_TOKEN not found. Add it to Kaggle Secrets.")
+```
+┌─────────────────────────────────────────────────────┐
+│ 📊 Differential Diagnosis with Confidence Scores    │
+├═════════════════════════════════════════════════════┤
+│ ┌─────────────────────────────────────┐            │
+│ │ 🎯 PRIMARY: Acne Vulgaris    │  78% │            │
+│ │ ███████████████▓░░░░░░░░░     (BLUE)│            │
+│ └─────────────────────────────────────┘            │
+│                                                     │
+│ Alternative Considerations:                         │
+│ ┌─────────────────────────────────────┐            │
+│ │ 1. Folliculitis          │    62%   │            │
+│ │ ████████████▓░░░░░░░░       (BLUE)  │            │
+│ │ Rationale: Bacterial...              │            │
+│ └─────────────────────────────────────┘            │
+│                                                     │
+│ ⚠️ RED FLAGS DETECTED                              │
+│ • Severe cystic acne may lead to scarring          │
+│ • Consider isotretinoin if conventional fails      │
+│                                                     │
+│ ⚠️ Recommendation: ROUTINE                         │
+│ Next Steps: Consult dermatologist for topical...  │
+│                                                     │
+│ ⚠️ DISCLAIMER: AI-generated estimates...           │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Cell 5: Verify GPU
+## 🐛 Troubleshooting
 
-```python
-import torch
+### Error: "No module named 'gradio'"
+**Fix**: Re-run Cell 1, restart session jika perlu
 
-print("🔍 GPU Check:")
-print(f"CUDA available: {torch.cuda.is_available()}")
+### Error: "HF_TOKEN not found"
+**Fix**: 
+1. Check Kaggle Secrets → pastikan label = `HF_TOKEN` (exact)
+2. Value harus HuggingFace token, bukan password Kaggle
 
-if torch.cuda.is_available():
-    print(f"GPU: {torch.cuda.get_device_name(0)}")
-    print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
-    print("✅ GPU ready for MedGemma!")
-else:
-    print("⚠️  No GPU detected. Enable GPU in Kaggle settings: Accelerator → GPU T4")
-```
+### Error: "CUDA out of memory"
+**Fix**:
+1. Restart runtime
+2. Pastikan GPU = T4 atau P100 (NOT CPU!)
+3. Check quantization config di Cell 2 (harus 4-bit)
 
----
+### Error: "Repository not found"
+**Fix**:
+1. Buka https://huggingface.co/google/medgemma-1.5-4b-it
+2. Accept license agreement
+3. Tunggu 1-2 menit
+4. Re-run Cell 2
 
-## Cell 6: Test Model Loading (Optional but Recommended)
+### Model loads but freezes on generate
+**Fix**:
+1. Check VRAM: `torch.cuda.memory_allocated(0) / 1024**3`
+2. Should be ~8-9 GB, not >14 GB
+3. Jika >14 GB, restart dan ensure 4-bit quantization
 
-```python
-# Quick test to ensure MedGemma can be loaded
-print("🧪 Testing MedGemma model loading...")
-
-from utils.model_loader import load_medgemma
-
-try:
-    model, processor = load_medgemma(model_name="google/medgemma-4b-it", quantize=True)
-    print("✅ MedGemma loaded successfully!")
-    print(f"📊 Model device: {model.device}")
-    
-    # Free memory for bot
-    del model
-    del processor
-    torch.cuda.empty_cache()
-    print("🗑️  Test model unloaded, memory cleared")
-    
-except Exception as e:
-    print(f"❌ Model loading failed: {e}")
-    print("Troubleshooting:")
-    print("1. Check HF access was granted to MedGemma")
-    print("2. Verify GPU is enabled (T4)")
-    print("3. Ensure internet is ON")
-```
+### Confidence scores not showing
+**Fix**:
+1. Check raw AI response (expand "📋 Raw AI Response")
+2. Pastikan format ada "PRIMARY DIAGNOSIS: ... (Confidence: X%)"
+3. Jika tidak ada, model belum generate dengan format yang benar
+4. Try dengan symptom history yang lebih detailed
 
 ---
 
-## Cell 7: Setup ngrok for Telegram Webhook
+## 📊 Performance Benchmarks
 
-```python
-from pyngrok import ngrok
-import time
-
-# Set ngrok auth token
-NGROK_TOKEN = os.environ.get('NGROK_TOKEN')
-ngrok.set_auth_token(NGROK_TOKEN)
-
-# Start ngrok tunnel
-print("🌐 Starting ngrok tunnel...")
-public_url = ngrok.connect(8080)
-print(f"✅ ngrok tunnel active: {public_url}")
-
-# Save for Telegram webhook
-os.environ['PUBLIC_URL'] = str(public_url)
-
-time.sleep(2)
-print("ngrok status:", ngrok.get_tunnels())
-```
-
----
-
-## Cell 8: Run DermaCheck AI Bot!
-
-```python
-# Run the Telegram bot
-print("🚀 Starting DermaCheck AI Bot...")
-print("=" * 60)
-
-# This will load MedGemma and start the bot
-!python telegram_bot_medgemma.py
-
-# Note: Bot will run continuously. Stop with Kernel → Interrupt.
-```
-
----
-
-## Cell 9: Monitor Logs (Optional - Run in separate output)
-
-```python
-# Tail logs in real-time
-!tail -f bot.log
-```
-
----
-
-## Troubleshooting
-
-### Model Loading Fails (400/403 Error)
-**Solution**: Request access to MedGemma on HuggingFace (may take ~1 hour)
-
-### Out of Memory Error
-**Solution**: Ensure 4-bit quantization is enabled (`quantize=True`)
-
-### Telegram Bot Not Responding
-**Check**:
-1. Bot token is correct (from @BotFather)
-2. ngrok tunnel is active
-3. Webhook set correctly
-4. Check logs: `!tail bot.log`
-
-### GPU Not Detected
-**Solution**: Kaggle Settings → Accelerator → GPU T4 → Save
-
----
-
-## Performance Expectations
+Expected performance pada Kaggle T4:
 
 | Metric | Value |
 |--------|-------|
-| Model load time | ~2-3 min (one-time) |
-| Photo analysis | ~15-20s |
-| Text consultation | ~8-10s |
-| GPU memory usage | ~12-14GB |
+| Model Load Time | 3-4 minutes |
+| First Inference | 8-12 seconds (cold start) |
+| Subsequent | 3-5 seconds |
+| VRAM Usage | 8-9 GB |
+| Inference Batch | 1 image |
+| Max Token | 800 tokens |
 
 ---
 
-## After Demo
+## 🎯 Competition Submission Tips
 
-```python
-# Stop bot gracefully
-# Kernel → Interrupt
+Setelah testing berhasil:
 
-# Cleanup (optional)
-!pkill -f telegram_bot
+1. **Capture Screenshots**
+   - UI dengan confidence visualization
+   - Example outputs (3-4 different cases)
+   - Performance metrics
 
-# Check ngrok
-ngrok.kill()
-```
+2. **Record Video Demo**
+   - Upload image → analyze → show results
+   - Highlight confidence scores
+   - Show differential diagnoses
+   - Max 3 minutes
+
+3. **Save Kaggle Notebook**
+   - Title: "DermaCheck AI - MedGemma Confidence Scores"
+   - Make public
+   - Add description dengan features
+
+4. **Share Link**
+   - Gradio public link: https://xxxxx.gradio.live
+   - Kaggle notebook link
+   - GitHub repo (optional)
 
 ---
 
-**Status**: Ready for deployment! 🎉  
-**Compliance**: HAI-DEF (MedGemma) ✅  
-**Cost**: $0 (Kaggle free tier) ✅
+## 🚀 Next Steps
+
+After successful deployment:
+
+1. **Test with Real Images**
+   - DermNet NZ images
+   - Kaggle HAM10000 dataset
+   - Your own test cases
+
+2. **Fine-tune (Optional)**
+   - Use DermNet data for dermatology focus
+   - Improve confidence accuracy
+
+3. **Add Features**
+   - PDF report generation
+   - Before/after photo comparison
+   - Lesion localization with bounding boxes
+
+4. **Prepare Submission**
+   - Write 3-page writeup
+   - Create 3-minute demo video
+   - Submit to Kaggle competition
+
+---
+
+## 📞 Support
+
+Jika stuck:
+1. Check error message di Kaggle notebook output
+2. Verify GPU is enabled
+3. Ensure HF_TOKEN is correct
+4. Model access granted on HuggingFace
+
+**Good luck! 🚀**

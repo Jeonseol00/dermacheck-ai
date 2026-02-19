@@ -1,0 +1,76 @@
+# IMPROVED PROMPT - Copy this to replace lines 363-429 in medgemma_multimodal_client.py
+
+        prompt = f"""As an expert dermatology AI assistant with evidence-based clinical knowledge, analyze this skin lesion comprehensively.{lang_instruction}
+
+**RISK STRATIFICATION FRAMEWORK:**
+
+You must classify cases into one of three tiers:
+- 🔴 **HIGH RISK** (URGENT): Melanoma red flags, SCC suspected, severe acne Grade 4-5, aggressive BCC
+- 🟡 **MEDIUM RISK** (ROUTINE REFERRAL): Moderate acne Grade 3, atypical moles, chronic eczema/psoriasis
+- 🟢 **LOW RISK** (REASSURANCE): Benign conditions (dermatographia, mild acne 0-2, seborrheic keratosis)
+
+**CRITICAL DIAGNOSTIC RULES:**
+
+1. **ABCDE Criteria** - ONLY apply to PIGMENTED lesions suspicious for melanoma:
+   - DO NOT apply ABCDE to: acne, rosacea, eczema, dermatographia, infections
+   - ABCDE positive = Asymmetry + Border irregularity + Color variation + Diameter >6mm + Evolution
+   
+2. **7-Point Melanoma Checklist** (Score ≥3 = URGENT):
+   - Major (2 pts each): Change in size, irregular shape, irregular color
+   - Minor (1 pt each): Diameter ≥7mm, inflammation, oozing/bleeding, change in sensation
+
+3. **Acne IGA Grading** (0-5 scale):
+   - Grade 0-1: Clear/almost clear → LOW RISK
+   - Grade 2: Mild (<50% face, few inflammatory) → LOW RISK
+   - Grade 3: Moderate (>50% face, many inflammatory) → MEDIUM RISK
+   - Grade 4-5: Severe (many nodules, scarring) → HIGH RISK
+
+4. **Benign Condition Recognition**:
+   - **Dermatographia**: Wheals from scratching, resolves <30min → LOW RISK (not serious!)
+   - **Seborrheic Keratosis**: "Stuck-on" appearance, waxy, uniform color → LOW RISK
+   - **Cherry Angioma**: Red vascular bump, benign → LOW RISK
+   - **Skin Tags**: Flesh-colored, pedunculated → LOW RISK
+
+**Patient Information:**
+- Body Location: {body_location}
+- Symptom History: {symptom_history if symptom_history else "Not provided"}
+- Clinical Image: Provided for visual analysis
+
+**REQUIRED OUTPUT FORMAT:**
+
+PRIMARY DIAGNOSIS: [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
+
+[Write 2-3 sentences explaining:
+1. Why this is the most likely diagnosis based on VISUAL features
+2. Which diagnostic criteria support this (e.g., IGA Grade, ABCDE if applicable, morphology)
+3. Key clinical context that informed the risk level]
+
+DIFFERENTIAL DIAGNOSES:
+1. [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
+   Rationale: [1-2 sentences with clinical reasoning]
+
+2. [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
+   Rationale: [1-2 sentences with clinical reasoning]
+
+3. [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
+   Rationale: [1-2 sentences with clinical reasoning]
+
+CLINICAL ASSESSMENT:
+ABCDE Score (if applicable): [Score or "N/A - not a pigmented melanocytic lesion"]
+7-Point Melanoma Checklist (if applicable): [Score/7 or "N/A"]
+IGA Acne Grade (if acne): [0-5 or "N/A"]
+Red Flags: [List specific concerning features OR "None detected - reassuring features present"]
+
+RECOMMENDATION:
+Urgency Level: [URGENT/SOON/ROUTINE]
+Risk Tier: [🔴 HIGH / 🟡 MEDIUM / 🟢 LOW]
+Next Steps: [Specific, actionable recommendations tailored to risk level]
+
+**CONFIDENCE PERCENTAGE GUIDELINES:**
+- Primary diagnosis: 45-90% (highest confidence)
+- Differential #1: 10-45% (second most likely)
+- Differential #2: 5-30% (plausible alternative)
+- Differential #3: 2-20% (less likely but possible)
+
+**Begin your clinical analysis now:**
+"""

@@ -1,0 +1,445 @@
+/* 
+DermaCheck AI - Premium Theme CSS
+Competition-ready professional styling
+*/
+
+/* ============================================
+   1. CSS VARIABLES - Medical Professional Theme
+   ============================================ */
+
+:root {
+    /* Primary - Medical Blue */
+    --primary-50: #E3F2FD;
+    --primary-100: #BBDEFB;
+    --primary-500: #2196F3;
+    --primary-600: #1E88E5;
+    --primary-700: #1976D2;
+    --primary-900: #0D47A1;
+
+    /* Accent - Health Green */
+    --accent-400: #66BB6A;
+    --accent-500: #4CAF50;
+    --accent-600: #43A047;
+
+    /* Warning - Medical Orange */
+    --warning-400: #FFA726;
+    --warning-500: #FF9800;
+
+    /* Danger - Alert Red */
+    --danger-400: #EF5350;
+    --danger-500: #F44336;
+
+    /* Neutral - Clean Grays */
+    --gray-50: #FAFAFA;
+    --gray-100: #F5F5F5;
+    --gray-200: #EEEEEE;
+    --gray-300: #E0E0E0;
+    --gray-400: #BDBDBD;
+    --gray-500: #9E9E9E;
+    --gray-700: #616161;
+    --gray-800: #424242;
+    --gray-900: #212121;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    /* Typography */
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Inter', sans-serif;
+}
+
+/* ============================================
+   2. BASE STYLES & RESETS
+   ============================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   3. GLASSMORPHISM EFFECTS
+   ============================================ */
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.glass-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.glass-button {
+    background: rgba(33, 150, 243, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button:hover {
+    background: rgba(33, 150, 243, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(33, 150, 243, 0.4);
+}
+
+/* ============================================
+   4. ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideInRight 0.5s ease-out;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* ============================================
+   5. CUSTOM GRADIO OVERRIDES
+   ============================================ */
+
+/* Header styling */
+.gradio-container .header-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: var(--spacing-2xl);
+    border-radius: var(--radius-xl);
+    color: white;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Tab styling */
+.gradio-container .tabs {
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.gradio-container .tab-nav button {
+    font-weight: 600;
+    padding: var(--spacing-md) var(--spacing-lg);
+    transition: all 0.3s ease;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.gradio-container .tab-nav button:hover {
+    background: var(--primary-50);
+    transform: translateY(-2px);
+}
+
+.gradio-container .tab-nav button.selected {
+    background: var(--primary-500);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+/* Button enhancements */
+.gradio-container button {
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+}
+
+.gradio-container button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+.gradio-container button.primary {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+    color: white;
+}
+
+.gradio-container button.secondary {
+    background: var(--gray-100);
+    color: var(--gray-900);
+}
+
+/* Input fields */
+.gradio-container input,
+.gradio-container textarea {
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    transition: border-color 0.3s ease;
+}
+
+.gradio-container input:focus,
+.gradio-container textarea:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    outline: none;
+}
+
+/* Gallery styling */
+.gradio-container .gallery-grid {
+    gap: var(--spacing-md);
+}
+
+.gradio-container .gallery-item {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.gradio-container .gallery-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Card components */
+.metric-box {
+    border: 2px solid var(--primary-500);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(33, 150, 243, 0.1));
+    animation: fadeIn 0.5s ease-out;
+}
+
+.warning-box {
+    background: rgba(255, 152, 0, 0.1);
+    border-left: 5px solid var(--warning-500);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    border-radius: var(--radius-sm);
+}
+
+.urgent-box {
+    background: rgba(244, 67, 54, 0.1);
+    border-left: 5px solid var(--danger-500);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    border-radius: var(--radius-sm);
+    animation: pulse 2s infinite;
+}
+
+/* ============================================
+   6. MOBILE RESPONSIVE
+   ============================================ */
+
+/* Mobile (< 640px) */
+@media (max-width: 640px) {
+    :root {
+        --spacing-xl: 1.5rem;
+        --spacing-2xl: 2rem;
+    }
+
+    .gradio-container {
+        padding: var(--spacing-sm);
+    }
+
+    .gradio-container .header-container {
+        padding: var(--spacing-lg);
+    }
+
+    .gradio-container .header-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .gradio-container .header-container h3 {
+        font-size: 1rem;
+    }
+
+    /* Stack columns on mobile */
+    .gradio-container .row {
+        flex-direction: column;
+    }
+
+    /* Gallery: 1 column on mobile */
+    .gradio-container .gallery-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Larger touch targets */
+    .gradio-container button {
+        min-height: 44px;
+        font-size: 1rem;
+    }
+
+    .gradio-container input,
+    .gradio-container textarea {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
+    }
+}
+
+/* Tablet (641px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+
+    /* Gallery: 2 columns on tablet */
+    .gradio-container .gallery-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Desktop (> 1024px) */
+@media (min-width: 1025px) {
+    .gradio-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Gallery: 4 columns on desktop */
+    .gradio-container .gallery-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
+
+/* ============================================
+   7. UTILITY CLASSES
+   ============================================ */
+
+.btn-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-hover:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.text-primary {
+    color: var(--primary-500);
+}
+
+.text-accent {
+    color: var(--accent-500);
+}
+
+.text-danger {
+    color: var(--danger-500);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+}
+
+.rounded-lg {
+    border-radius: var(--radius-lg);
+}
+
+.shadow-premium {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   8. DARK MODE SUPPORT (Optional)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --gray-50: #1a1a1a;
+        --gray-100: #2a2a2a;
+        --gray-900: #f5f5f5;
+    }
+
+    .glass-card {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* ============================================
+   9. PRINT STYLES
+   ============================================ */
+
+@media print {
+
+    .gradio-container button,
+    .gradio-container input {
+        display: none;
+    }
+
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

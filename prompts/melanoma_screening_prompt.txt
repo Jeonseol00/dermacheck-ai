@@ -1,0 +1,211 @@
+MELANOMA SCREENING PROTOCOL (Focused Assessment)
+Use when patient presents with pigmented lesion or mole concerns.
+
+═══════════════════════════════════════════
+PATIENT CONTEXT
+═══════════════════════════════════════════
+Age: {age}
+Fitzpatrick Skin Type: {fitzpatrick_type}
+Lesion Location: {location}
+Duration: {duration}
+Changes Noted: {evolution_description}
+Family History of Melanoma: {family_hx_melanoma}
+Personal History of Skin Cancer: {personal_hx}
+Sun Exposure History: {sun_exposure}
+
+═══════════════════════════════════════════
+ABCDE CRITERIA EVALUATION
+═══════════════════════════════════════════
+
+A - ASYMMETRY:
+If you draw a line through the middle, do the two halves match?
+- Symmetric (reassuring)
+- Asymmetric in 1 axis (concerning)
+- Asymmetric in 2 axes (highly concerning)
+
+Score: [0 = symmetric / 1 = asymmetric]
+
+B - BORDER IRREGULARITY:
+Are the edges smooth and even, or notched/scalloped/poorly defined?
+- Smooth, well-defined (reassuring)
+- Slightly irregular
+- Markedly irregular, notched (concerning)
+
+Score: [0 = smooth / 1 = irregular]
+
+C - COLOR VARIATION:
+Is the color uniform, or multiple shades present?
+Single color (reassuring):
+- Uniform tan, brown, or black
+
+Multiple colors (concerning):
+- Tan AND brown
+- Brown AND black
+- Red, white, or blue within lesion (highly concerning!)
+
+Score: [0 = uniform / 1 = varied / 2 = multiple + red/white/blue]
+
+D - DIAMETER:
+What is the size of the lesion?
+- < 6 mm (reassuring, but melanoma can be smaller!)
+- ≥ 6 mm (concerning - size of pencil eraser)
+- > 10 mm (more concern ing)
+
+Score: [0 = <6mm / 1 = ≥6mm]
+
+E - EVOLUTION (MOST IMPORTANT!):
+Has the lesion changed over time?
+- Stable for years (reassuring)
+- Growing in size (concerning)
+- Changing color (concerning)
+- Changing shape (concerning)
+- New symptoms: itch, bleed, crust (concerning)
+
+"The ugly duckling" - Does it look different from other moles?
+
+Score: [0 = stable / 1 = evolving]
+
+═══════════════════════════════════════════
+TOTAL ABCDE SCORE: ___ / 6
+═══════════════════════════════════════════
+0-1: Low suspicion (but monitor!)
+2-3: Moderate suspicion → Dermatology evaluation
+4-6: High suspicion → URGENT dermatology referral + biopsy
+
+═══════════════════════════════════════════
+SPECIAL CONSIDERATIONS FOR SKIN OF COLOR
+ ═══════════════════════════════════════════
+
+⚠️ If Fitzpatrick IV-VI (Darker skin):
+
+ACRAL LENTIGINOUS MELANOMA (ALM):
+Most common melanoma subtype in people of color!
+NOT related to sun exposure.
+
+High-risk locations:
+- Palms of hands
+- Soles of feet
+- Under nails (subungual)
+- Mucous membranes (oral, genital)
+
+RED FLAGS for ALM:
+🚨 Pigmented lesion on palm/sole
+🚨 Longitudinal pigmented band in nail (melanonychia)
+🚨 Hutchinson's sign: Pigment extends from nail to surrounding skin (CRITICAL!)
+🚨 Nail dystrophy or nail separation
+🚨 Pigmented lesion in mouth or genital area
+
+ALM characteristics:
+- Often diagnosed late (poor outcomes!)
+- Irregular borders
+- Diameter often > 6mm at presentation
+- Color may be uniform dark brown/black (vs variegated)
+- MUST have low threshold for biopsy
+
+If acral/mucosal location + pigmentation → URGENT dermatology referral!
+
+═══════════════════════════════════════════
+ADDITIONAL RISK FACTORS
+═══════════════════════════════════════════
+
+HIGH RISK (Refer for full skin exam):
+- > 50 moles total
+- Atypical/dysplastic nevi
+- Large congenital nevi
+- Previous melanoma or other skin cancer
+- Family history of melanoma
+- Immunosuppression (transplant, HIV)
+- BRAF/CDKN2A gene mutations
+
+ENVIRONMENTAL:
+- Severe sunburns (especially childhood)
+- Tanning bed use
+- High cumulative sun exposure
+
+═══════════════════════════════════════════
+DERMOSCOPY CLUES (if available)
+═══════════════════════════════════════════
+
+Benign features:
+- Uniform pigment network
+- Central hypopigmentation
+- Regular dots/globules
+
+Concerning features:
+- Atypical network (irregular holes)
+- Blue-white veil
+- Irregular streaks
+- Multiple colors
+- Regression areas
+- Asymmetric pigmentation
+
+═══════════════════════════════════════════
+RECOMMENDATION
+═══════════════════════════════════════════
+
+ABCDE Score: ___/6
+Location: {location}
+Fitzpatrick Type: {fitzpatrick_type}
+Acral/Mucosal: [Yes/No]
+
+URGENCY LEVEL:
+
+ROUTINE MONITORING (Low suspicion):
+- ABCDE 0-1, stable, no evolution
+- Document with photo
+- Re-examine in 3-6 months
+- PATIENT INSTRUCTION: Return immediately if ANY change
+
+DERMATOLOGY REFERRAL (within 2-4 weeks):
+- ABCDE 2-3
+- Atypical features
+- Patient anxiety (even if low risk)
+- Multiple risk factors
+
+URGENT DERMATOLOGY REFERRAL (within 1-2 weeks):
+- ABCDE ≥ 4
+- Acral/mucosal location in skin of color
+- Hutchinson's sign
+- Rapidly evolving
+- New pigmented lesion age > 40
+- "Ugly duckling" lesion
+
+EMERGENCY (Same day):
+- Bleeding/ulcerated melanoma
+- Satellite lesions (metastatic spread)
+
+═══════════════════════════════════════════
+CRITICAL SAFETY MESSAGE
+═══════════════════════════════════════════
+
+⚠️ ZERO TOLERANCE FOR FALSE NEGATIVES
+When in doubt, REFER!
+
+Melanoma is life-threatening if not caught early.
+5-year survival:
+- Localized (early): >99%
+- Regional spread: 66%
+- Distant metastasis: 27%
+
+Better to biopsy 10 benign moles than miss 1 melanoma.
+
+Any concerning pigmented lesion requires dermatologist evaluation + biopsy for DEFINITIVE diagnosis.
+
+This AI assessment does NOT replace clinical examination.
+
+═══════════════════════════════════════════
+OUTPUT
+═══════════════════════════════════════════
+
+MELANOMA SUSPICION: [LOW / MODERATE / HIGH]
+ABCDE SCORE: ___/6
+URGENCY: [ROUTINE MONITOR / REFER 2-4 WEEKS / URGENT 1-2 WEEKS / EMERGENCY]
+
+ACRAL/MUCOSAL LOCATION: [Yes/No]
+HUTCHINSON'S SIGN: [Yes/No/Not applicable]
+
+RECOMMENDED ACTION:
+_____________________
+
+PATIENT EDUCATION:
+- [Specific instructions based on suspicion level]

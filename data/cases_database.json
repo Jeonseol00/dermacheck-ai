@@ -1,0 +1,212 @@
+[
+  {
+    "case_id": "001",
+    "condition": "melanoma",
+    "image_path": "cases/melanoma/melanoma_001.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "002",
+    "condition": "melanoma",
+    "image_path": "cases/melanoma/melanoma_002.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "003",
+    "condition": "melanoma",
+    "image_path": "cases/melanoma/melanoma_003.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "004",
+    "condition": "melanoma",
+    "image_path": "cases/melanoma/melanoma_004.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "005",
+    "condition": "melanoma",
+    "image_path": "cases/melanoma/melanoma_005.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "006",
+    "condition": "basal_cell_carcinoma",
+    "image_path": "cases/basal_cell_carcinoma/basal_cell_carcinoma_006.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "007",
+    "condition": "basal_cell_carcinoma",
+    "image_path": "cases/basal_cell_carcinoma/basal_cell_carcinoma_007.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "008",
+    "condition": "basal_cell_carcinoma",
+    "image_path": "cases/basal_cell_carcinoma/basal_cell_carcinoma_008.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "009",
+    "condition": "basal_cell_carcinoma",
+    "image_path": "cases/basal_cell_carcinoma/basal_cell_carcinoma_009.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "010",
+    "condition": "basal_cell_carcinoma",
+    "image_path": "cases/basal_cell_carcinoma/basal_cell_carcinoma_010.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "011",
+    "condition": "actinic_keratosis",
+    "image_path": "cases/actinic_keratosis/actinic_keratosis_011.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "012",
+    "condition": "actinic_keratosis",
+    "image_path": "cases/actinic_keratosis/actinic_keratosis_012.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "013",
+    "condition": "actinic_keratosis",
+    "image_path": "cases/actinic_keratosis/actinic_keratosis_013.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "014",
+    "condition": "actinic_keratosis",
+    "image_path": "cases/actinic_keratosis/actinic_keratosis_014.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "015",
+    "condition": "actinic_keratosis",
+    "image_path": "cases/actinic_keratosis/actinic_keratosis_015.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "016",
+    "condition": "nevus",
+    "image_path": "cases/nevus/nevus_016.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "017",
+    "condition": "nevus",
+    "image_path": "cases/nevus/nevus_017.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "018",
+    "condition": "nevus",
+    "image_path": "cases/nevus/nevus_018.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "019",
+    "condition": "nevus",
+    "image_path": "cases/nevus/nevus_019.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "020",
+    "condition": "nevus",
+    "image_path": "cases/nevus/nevus_020.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "021",
+    "condition": "seborrheic_keratosis",
+    "image_path": "cases/seborrheic_keratosis/seborrheic_keratosis_021.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "022",
+    "condition": "seborrheic_keratosis",
+    "image_path": "cases/seborrheic_keratosis/seborrheic_keratosis_022.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "023",
+    "condition": "seborrheic_keratosis",
+    "image_path": "cases/seborrheic_keratosis/seborrheic_keratosis_023.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "024",
+    "condition": "seborrheic_keratosis",
+    "image_path": "cases/seborrheic_keratosis/seborrheic_keratosis_024.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "025",
+    "condition": "seborrheic_keratosis",
+    "image_path": "cases/seborrheic_keratosis/seborrheic_keratosis_025.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "026",
+    "condition": "dermatofibroma",
+    "image_path": "cases/dermatofibroma/dermatofibroma_026.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "027",
+    "condition": "dermatofibroma",
+    "image_path": "cases/dermatofibroma/dermatofibroma_027.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "028",
+    "condition": "dermatofibroma",
+    "image_path": "cases/dermatofibroma/dermatofibroma_028.jpg",
+    "source": "HAM10000_images_part_1"
+  },
+  {
+    "case_id": "029",
+    "condition": "dermatofibroma",
+    "image_path": "cases/dermatofibroma/dermatofibroma_029.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "030",
+    "condition": "dermatofibroma",
+    "image_path": "cases/dermatofibroma/dermatofibroma_030.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "031",
+    "condition": "vascular_lesion",
+    "image_path": "cases/vascular_lesion/vascular_lesion_031.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "032",
+    "condition": "vascular_lesion",
+    "image_path": "cases/vascular_lesion/vascular_lesion_032.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "033",
+    "condition": "vascular_lesion",
+    "image_path": "cases/vascular_lesion/vascular_lesion_033.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "034",
+    "condition": "vascular_lesion",
+    "image_path": "cases/vascular_lesion/vascular_lesion_034.jpg",
+    "source": "ham10000_images_part_2"
+  },
+  {
+    "case_id": "035",
+    "condition": "vascular_lesion",
+    "image_path": "cases/vascular_lesion/vascular_lesion_035.jpg",
+    "source": "ham10000_images_part_2"
+  }
+]

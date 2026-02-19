@@ -1,76 +1,75 @@
-# Python
+# ============================================
+# DermaCheck AI — .gitignore
+# MedGemma Impact Challenge 2026
+# ============================================
+
+# === Python ===
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# === Virtual Environment ===
+venv/
 env/
-venv/
 ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+.venv/
 
-# Virtual Environment
-venv/
-ENV/
-.venv
+# === Data & Datasets (too large for GitHub) ===
+data/raw/
+data/cases/
+*.zip
+*.tar.gz
+*.csv
+*.h5
+*.pth
+*.bin
+*.onnx
+*.safetensors
 
-# IDE
+# === Model Weights ===
+models/weights/
+
+# === Environment Variables (secrets) ===
+.env
+.env.local
+.env.production
+
+# === IDE ===
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# === Jupyter ===
+.ipynb_checkpoints/
 
-# Environment variables
-.env
-.env.local
-
-# Streamlit
-.streamlit/secrets.toml
-
-# Model files (too large for git)
-*.pth
-*.bin
-*.h5
-*.onnx
-models/weights/
-
-# Data
-*.csv
-*.json
-!config/*.json
-!data/*.json  # Allow Sherlock demo data
-
-# User uploads
-uploads/
+# === Temporary Files ===
 temp/
-
-# Logs
+uploads/
 logs/
 *.log
 
-# OS
+# === Build & Distribution ===
+build/
+dist/
+*.egg-info/
+*.egg
+
+# === OS ===
 .DS_Store
 Thumbs.db
 
-# Testing
+# === Testing ===
 .coverage
 htmlcov/
 .pytest_cache/
+
+# === Backup Files ===
+*.backup.*
+*.bak
+
+# === Archives (old deprecated code) ===
+archive/

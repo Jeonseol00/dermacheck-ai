@@ -169,9 +169,6 @@ class MedGemmaMultimodalClient:
             if prompt in response:
                 response = response.replace(prompt, "").strip()
             
-            # CRITICAL: Strip thinking mode tokens!
-            response = self._strip_thinking_tokens(response)
-            
             return response
         
         except Exception as e:
@@ -331,8 +328,7 @@ Format clearly with section headers.
         self,
         image: Union[str, Image.Image],
         body_location: str = "Unknown",
-        symptom_history: str = "",
-        language: str = "en"  # Add language parameter ("en" or "id")
+        symptom_history: str = ""
     ) -> str:
         """
         Dermatology analysis with confidence score extraction
@@ -349,100 +345,50 @@ Format clearly with section headers.
             Formatted text response with confidence scores
         """
         
-        logger.info(f"📊 Starting confidence-score analysis (language: {language})...")
+        logger.info("📊 Starting confidence-score analysis...")
         
-        # Language instructions
-        lang_instruction = ""
-        if language == "id":
-            lang_instruction = """\n**CRITICAL: RESPOND IN BAHASA INDONESIA**
-- Write ALL clinical explanations and rationale in Bahasa Indonesia
-- Keep medical condition names in English (international medical standard)
-- Example: "Diagnosis Utama: Stasis Dermatitis (Tingkat Keyakinan: 85%)"
-- Example rationale in Indonesian: "Pasien menunjukkan garis-garis cokelat yang konsisten dengan insufisiensi vena..."
-"""
-        else:
-            lang_instruction = "\n**LANGUAGE: Respond in English**\n"
-        
-        prompt = f"""As an expert dermatology AI assistant with evidence-based clinical knowledge, analyze this skin lesion comprehensively.{lang_instruction}
+        prompt = f"""As a dermatology AI assistant, analyze this skin lesion and provide a differential diagnosis with confidence scores.
 
-**RISK STRATIFICATION FRAMEWORK:**
-
-You must classify cases into one of three tiers:
-- 🔴 **HIGH RISK** (URGENT): Melanoma red flags, SCC suspected, severe acne Grade 4-5, aggressive BCC
-- 🟡 **MEDIUM RISK** (ROUTINE REFERRAL): Moderate acne Grade 3, atypical moles, chronic eczema/psoriasis
-- 🟢 **LOW RISK** (REASSURANCE): Benign conditions (dermatographia, mild acne 0-2, seborrheic keratosis)
-
-**CRITICAL DIAGNOSTIC RULES:**
-
-1. **ABCDE Criteria** - ONLY apply to PIGMENTED lesions suspicious for melanoma:
-   - DO NOT apply ABCDE to: acne, rosacea, eczema, dermatographia, infections
-   - ABCDE positive = Asymmetry + Border irregularity + Color variation + Diameter >6mm + Evolution
-   
-2. **7-Point Melanoma Checklist** (Score ≥3 = URGENT):
-   - Major (2 pts each): Change in size, irregular shape, irregular color
-   - Minor (1 pt each): Diameter ≥7mm, inflammation, oozing/bleeding, change in sensation
-
-3. **Acne IGA Grading** (0-5 scale):
-   - Grade 0-1: Clear/almost clear → LOW RISK
-   - Grade 2: Mild (<50% face, few inflammatory) → LOW RISK
-   - Grade 3: Moderate (>50% face, many inflammatory) → MEDIUM RISK
-   - Grade 4-5: Severe (many nodules, scarring) → HIGH RISK
-
-4. **Benign Condition Recognition**:
-   - **Dermatographia**: Wheals from scratching, resolves <30min → LOW RISK (not serious!)
-   - **Seborrheic Keratosis**: "Stuck-on" appearance, waxy, uniform color → LOW RISK
-   - **Cherry Angioma**: Red vascular bump, benign → LOW RISK
-   - **Skin Tags**: Flesh-colored, pedunculated → LOW RISK
+**CRITICAL INSTRUCTIONS:**
+1. Provide PRIMARY diagnosis with confidence percentage (0-100%)
+2. List TOP 3 DIFFERENTIAL DIAGNOSES with confidence percentages
+3. Use EXACT format shown below (do not deviate)
 
 **Patient Information:**
 - Body Location: {body_location}
 - Symptom History: {symptom_history if symptom_history else "Not provided"}
-- Clinical Image: Provided for visual analysis
+- Clinical Image: Provided
 
 **REQUIRED OUTPUT FORMAT:**
 
-PRIMARY DIAGNOSIS: [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
+PRIMARY DIAGNOSIS: [condition name] (Confidence: XX%)
 
-[Write 2-3 sentences explaining:
-1. Why this is the most likely diagnosis based on VISUAL features
-2. Which diagnostic criteria support this (e.g., IGA Grade, ABCDE if applicable, morphology)
-3. Key clinical context that informed the risk level]
+[Brief 1-2 sentence clinical reasoning for primary diagnosis]
 
 DIFFERENTIAL DIAGNOSES:
-1. [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
-   Rationale: [1-2 sentences with clinical reasoning]
+1. [condition name] (Confidence: XX%)
+   Rationale: [1 sentence why this is considered]
 
-2. [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
-   Rationale: [1-2 sentences with clinical reasoning]
+2. [condition name] (Confidence: XX%)
+   Rationale: [1 sentence why this is considered]
 
-3. [condition name] (Confidence: XX%, Risk: HIGH/MEDIUM/LOW)
-   Rationale: [1-2 sentences with clinical reasoning]
+3. [condition name] (Confidence: XX%)
+   Rationale: [1 sentence why this is considered]
 
-CLINICAL ASSESSMENT:
-ABCDE Score (if applicable): [Score or "N/A - not a pigmented melanocytic lesion"]
-7-Point Melanoma Checklist (if applicable): [Score/7 or "N/A"]
-IGA Acne Grade (if acne): [0-5 or "N/A"]
-Red Flags: [List specific concerning features OR "None detected - reassuring features present"]
+RED FLAGS:
+[List any concerning features that warrant urgent evaluation, or state "None detected"]
 
 RECOMMENDATION:
 Urgency Level: [URGENT/SOON/ROUTINE]
-Risk Tier: [🔴 HIGH / 🟡 MEDIUM / 🟢 LOW]
-Next Steps: [Specific, actionable recommendations tailored to risk level]
+Next Steps: [Specific actionable recommendations]
 
-**CONFIDENCE PERCENTAGE GUIDELINES:**
-- Primary diagnosis: 45-90% (highest confidence)
-- Differential #1: 10-45% (second most likely)
-- Differential #2: 5-30% (plausible alternative)
-- Differential #3: 2-20% (less likely but possible)
-
-**Begin your clinical analysis now:**
+**Begin differential diagnosis now:**
 """
-
         
         response = self.generate_response(
             prompt,
             image=image,
-            temperature=0.4,  # Balanced temperature for consistent formatting
+            temperature=0.4,  # Balanced temperature for consistency
             max_tokens=800
         )
         
@@ -637,97 +583,6 @@ Format with clear section headers and bullet points.
         """Extract triage level from SOAP note"""
         return self._extract_urgency(text)
     
-    def _strip_thinking_tokens(self, response: str) -> str:
-        """
-        Strip MedGemma thinking mode tokens from response
-        CRITICAL for clean output!
-        """
-        import re
-        
-        logger.info(f'📏 Original response: {len(response)} chars')
-        
-        original_response = response
-        
-        # STRATEGY 0: Remove numbered thinking steps (MOST AGGRESSIVE - FIRST!)
-        # Pattern: "1. Understand the Goal..." or "1. Deconstruct..." etc.
-        numbered_thinking_pattern = r'^(?:\d+\.\s+(?:Understand|Deconstruct|Triage|Subjective|Create|Generate|Provide|Note|Step).*?\n)+' 
-        
-        match = re.match(numbered_thinking_pattern, response, re.MULTILINE | re.IGNORECASE | re.DOTALL)
-        if match:
-            thinking_block = match.group(0)
-            # Count how many numbered items
-            num_items = len(re.findall(r'^\d+\.', thinking_block, re.MULTILINE))
-            if num_items >= 2:  # At least 2 numbered steps = thinking mode
-                response = response[match.end():].strip()
-                removed = len(original_response) - len(response)
-                logger.info(f'✂️  STRATEGY 0: Removed {num_items} numbered thinking steps ({removed} chars)')
-        
-        # STRATEGY 1: Extract from TRIAGE onwards
-        if 'TRIAGE:' in response.upper():
-            triage_patterns = [
-                r'(?:^|\n)TRIAGE:\s*(URGENT|ROUTINE|SEMI-URGENT|NON-URGENT)',
-                r'(?:^|\n)Triage Level:\s*(URGENT|ROUTINE|SEMI-URGENT|NON-URGENT)',
-            ]
-            
-            for pattern in triage_patterns:
-                match = re.search(pattern, response, re.IGNORECASE | re.MULTILINE)
-                if match:
-                    start_pos = match.start()
-                    cleaned = response[start_pos:].strip()
-                    removed = len(response) - len(cleaned)
-                    if removed > 10:  # Only if significant
-                        logger.info(f'✂️  STRATEGY 1: Extracted from TRIAGE ({removed} chars removed)')
-                        return cleaned
-        
-        # STRATEGY 2: Extract from **S onwards (SOAP start)
-        soap_patterns = [
-            r'\*\*S\s*\(Subjective\)',
-            r'\*\*S\s*-\s*SUBJEKTIF',
-            r'\*\*S\s*\(SUBJEKTIF\)',
-            r'S\s*\(Subjective\):',
-            r'\*\*S\s*-\s*SUBJECTIVE',
-        ]
-        
-        for pattern in soap_patterns:
-            match = re.search(pattern, response, re.IGNORECASE)
-            if match:
-                start_pos = match.start()
-                cleaned = response[start_pos:].strip()
-                removed = len(response) - len(cleaned)
-                if removed > 10:
-                    logger.info(f'✂️  STRATEGY 2: Extracted from SOAP start ({removed} chars removed)')
-                    # Add TRIAGE if missing
-                    if 'TRIAGE' not in cleaned.upper()[:50]:
-                        cleaned = 'TRIAGE: ROUTINE\n\n' + cleaned
-                    return cleaned
-        
-        # STRATEGY 3: Remove known thinking preambles
-        thinking_patterns = [
-            r'^.*?(?=\n\nTRIAGE:)',
-            r'^.*?thought.*?\n\n',
-            r'^.*?Here\'s.*?\n\n',
-            r'^\d+\.\s+\w+.*?\n',
-            r'^Let me.*?\n',
-        ]
-        
-        for i, pattern in enumerate(thinking_patterns, 1):
-            try:
-                test_clean = re.sub(pattern, '', response, count=1, flags=re.DOTALL | re.IGNORECASE)
-                if len(test_clean) < len(response):
-                    removed = len(response) - len(test_clean)
-                    if removed > 10:
-                        logger.info(f'✂️  STRATEGY 3: Removed thinking ({removed} chars) using pattern #{i}')
-                        response = test_clean.strip()
-                        break
-            except:
-                pass
-        
-        # Final check: if nothing worked, log warning
-        if response == original_response:
-            logger.warning('⚠️  NO STRIPPING APPLIED - check response format!')
-        
-        return response.strip()
-    
     def unload_model(self):
         """Free GPU memory by unloading model"""
         if self.model is not None:
@@ -747,211 +602,6 @@ Format with clear section headers and bullet points.
                 "max_allocated_gb": torch.cuda.max_memory_allocated() / 1e9
             }
         return {"error": "CUDA not available"}
-    
-    # ========================================================================
-    # 🆕 LESION LOCALIZATION FEATURE - MedGemma 1.5 Anatomy Localization
-    # ========================================================================
-    
-    def analyze_with_localization(
-        self,
-        image: Union[str, Image.Image],
-        body_location: str = "Unknown",
-        detection_threshold: float = 0.7
-    ) -> Dict:
-        """
-        🆕 PROFESSIONAL MULTI-LESION DETECTION
-        
-        Detect and localize MULTIPLE skin lesions in a single image.
-        Uses MedGemma 1.5 anatomy localization capabilities.
-        
-        Args:
-            image: PIL Image or path to image
-            body_location: Anatomical region (e.g., "left forearm", "back")
-            detection_threshold: Confidence threshold (0-1)
-        
-        Returns:
-            {
-                "lesions_detected": int,
-                "lesions": [
-                    {
-                        "id": "lesion_001",
-                        "bbox": [x1, y1, x2, y2],
-                        "confidence": 0.95,
-                        "diagnosis": "Melanocytic Nevus",
-                        "risk_level": "LOW",
-                        "description": "...",
-                        "recommendations": "..."
-                    }
-                ],
-                "processing_time": 2.34,
-                "body_location": body_location
-            }
-        """
-        import time
-        start_time = time.time()
-        
-        logger.info(f"🔍 Multi-lesion localization analysis starting...")
-        logger.info(f"   Body location: {body_location}")
-        
-        # Load image if path
-        if isinstance(image, str):
-            image = Image.open(image)
-        
-        # Build localization prompt
-        prompt =f"""TASK: Multi-Lesion Detection and Localization
-
-Analyze this dermatology image and identify ALL visible skin lesions.
-
-Body Location: {body_location}
-
-For EACH lesion detected:
-1. Bounding box: Approximate coordinates [x1, y1, x2, y2] relative to image
-2. Diagnosis: Lesion type (nevus, melanoma, etc.)
-3. Risk: LOW, MEDIUM, or HIGH based on ABCDE criteria
-4. Description: Size, color, border characteristics
-5. Recommendation: Brief clinical advice
-
-Format:
-
-LESION 1:
-Location: [x1, y1, x2, y2]
-Diagnosis: <type>
-Risk: <LOW/MEDIUM/HIGH>
-Description: <details>
-Recommendation: <advice>
-
-LESION 2:
-...
-
-If NO lesions: state "NO LESIONS DETECTED"."""
-
-        try:
-            # Generate MedGemma response
-            response = self.generate_response(
-                prompt=prompt,
-                image=image,
-                max_tokens=1024,
-                temperature=0.3
-            )
-            
-            logger.info(f"✅ MedGemma response: {len(response)} chars")
-            
-            # Parse lesions
-            lesions = self._parse_localization_response(response, image.size)
-            
-            # Filter by threshold
-            lesions = [l for l in lesions if l.get("confidence", 1.0) >= detection_threshold]
-            
-            processing_time = time.time() - start_time
-            
-            logger.info(f"✅ Detected {len(lesions)} lesions ({processing_time:.2f}s)")
-            
-            return {
-                "lesions_detected": len(lesions),
-                "lesions": lesions,
-                "body_location": body_location,
-                "processing_time": round(processing_time, 2),
-                "image_size": {
-                    "width": image.size[0],
-                    "height": image.size[1]
-                }
-            }
-            
-        except Exception as e:
-            logger.error(f"❌ Localization failed: {e}")
-            return {
-                "lesions_detected": 0,
-                "lesions": [],
-                "error": str(e),
-                "body_location": body_location
-            }
-    
-    def _parse_localization_response(self, response: str, image_size: tuple) -> List[Dict]:
-        """Parse MedGemma localization output into structured lesion data"""
-        import re
-        
-        lesions = []
-        width, height = image_size
-        
-        if "NO LESIONS DETECTED" in response.upper():
-            logger.info("No lesions detected")
-            return []
-        
-        # Split by LESION markers
-        lesion_blocks = re.split(r'LESION\s+(\d+):', response, flags=re.IGNORECASE)
-        
-        for i in range(1, len(lesion_blocks), 2):
-            if i + 1 >= len(lesion_blocks):
-                break
-                
-            lesion_num = lesion_blocks[i]
-            content = lesion_blocks[i + 1]
-            
-            try:
-                # Extract bbox
-                bbox_match = re.search(
-                    r'Location:\s*\[?(\d+),\s*(\d+),\s*(\d+),\s*(\d+)\]?',
-                    content,
-                    re.IGNORECASE
-                )
-                
-                if not bbox_match:
-                    logger.warning(f"No bbox for lesion {lesion_num}")
-                    continue
-                
-                x1, y1, x2, y2 = map(int, bbox_match.groups())
-                
-                # Clamp coordinates
-                x1 = max(0, min(x1, width))
-                y1 = max(0, min(y1, height))
-                x2 = max(0, min(x2, width))
-                y2 = max(0, min(y2, height))
-                
-                # Extract fields
-                diagnosis = self._extract_field_simple(content, "Diagnosis")
-                risk = self._extract_field_simple(content, "Risk")
-                description = self._extract_field_simple(content, "Description")
-                recommendation = self._extract_field_simple(content, "Recommendation")
-                
-                # Normalize risk
-                risk_upper = risk.upper()
-                if "HIGH" in risk_upper:
-                    risk_level = "HIGH"
-                elif "MEDIUM" in risk_upper or "MODERATE" in risk_upper:
-                    risk_level = "MEDIUM"
-                else:
-                    risk_level = "LOW"
-                
-                lesions.append({
-                    "id": f"lesion_{lesion_num.zfill(3)}",
-                    "bbox": [x1, y1, x2, y2],
-                    "confidence": 0.85,
-                    "diagnosis": diagnosis or "Skin lesion",
-                    "risk_level": risk_level,
-                    "description": description or "No description",
-                    "recommendations": recommendation or "Monitor for changes"
-                })
-                
-                logger.info(f"   ✅ Parsed {lesion_num}: {diagnosis} ({risk_level})")
-                
-            except Exception as e:
-                logger.warning(f"Failed parsing lesion {lesion_num}: {e}")
-                continue
-        
-        return lesions
-    
-    def _extract_field_simple(self, text: str, field_name: str) -> str:
-        """Simple field extraction helper"""
-        import re
-        
-        pattern = rf'{field_name}:\s*([^\n]+?)(?=\n[A-Z][a-z]+:|$)'
-        match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
-        
-        if match:
-            return match.group(1).strip()
-        
-        return ""
-
 
 
 # Example usage

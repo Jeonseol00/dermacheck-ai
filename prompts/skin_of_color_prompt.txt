@@ -1,0 +1,402 @@
+SKIN OF COLOR DERMATOLOGY PROTOCOL (Fitzpatrick IV-VI)
+Specialized evaluation for darker skin tones (Fitzpatrick Types IV, V, VI)
+
+═══════════════════════════════════════════
+PATIENT CONTEXT
+═══════════════════════════════════════════
+Fitzpatrick Type: {fitzpatrick_type}
+- Type IV: Olive/light brown, burns minimally
+- Type V: Brown, rarely burns
+- Type VI: Dark brown/black, never burns
+
+Ethnicity/Background: {ethnicity}
+Presenting Concern: {chief_complaint}
+Location: {body_location}
+Duration: {duration}
+
+═══════════════════════════════════════════
+CRITICAL ADJUSTMENTS FOR SKIN OF COLOR
+═══════════════════════════════════════════
+
+⚠️ ERYTHEMA (Inflammation) PRESENTATION DIFFERENCES:
+
+Traditional teaching: "Inflammation = RED skin"
+Reality in darker skin: Erythema often NOT red!
+
+Expected Colors in Fitzpatrick IV-VI:
+- PURPLE / VIOLACEOUS (most common!)
+- GRAYISH
+- BROWN-PURPLE
+- ASHEN
+- SUBTLE DARKENING of existing skin tone
+
+DO NOT expect bright red or pink erythema!
+
+Examples by condition:
+- Atopic dermatitis: Brown-gray, violaceous patches (NOT bright red!)
+- Psoriasis: Purple-brown plaques with white/gray scale
+- Cellulitis: Violaceous, subtle warmth more reliable than color
+- Lupus malar rash: Hyperpigmented, violaceous (may be barely visible!)
+
+═══════════════════════════════════════════
+ALTERNATIVE DIAGNOSTIC CUES
+(When color is unreliable)
+═══════════════════════════════════════════
+
+Since erythema often invisible or atypical color, RELY ON:
+
+1. **WARMTH** (Palpation):
+   Ask patient: "Does the area feel warm to touch?"
+   Heat = inflammation (more reliable than color!)
+
+2. **TEXTURE CHANGES**:
+   - Rough surface
+   - Thickened skin (lichenification)
+   - Papules palpable before visible
+   - Edema/swelling
+
+3. **ELEVATION**: Use oblique lighting
+   - Lesions may be elevated but color-matched to skin
+   - Shadows reveal papules/plaques
+
+4. **PATIENT SYMPTOMS** (CRITICAL!):
+   - Pruritus (itch) - highly significant
+   - Pain/tenderness
+   - Burning sensation
+   - Duration and progression
+
+5. **SURFACE CHANGES**:
+   - Scale type and distribution
+   - Crusting  
+   - Erosions/excoriation
+
+6. **BLANCHING TEST**:
+   Ask: "If you press on it, does the color fade?"
+   - Blanches → Vascular (erythema)
+   - Non-blanching → Purpura (vasculitis/bleeding disorder)
+
+═══════════════════════════════════════════
+POST-INFLAMMATORY HYPERPIGMENTATION (PIH)
+═══════════════════════════════════════════
+
+⚠️ PIH is MUCH more prominent and longer-lasting in darker skin!
+
+Key Features of PIH:
+- Flat (macule/patch)
+- Uniform brown/dark brown color
+- Smooth surface (no scale or texture change)
+- Asymptomatic
+- Distribution matches prior inflammation
+- Slow resolution (months to YEARS vs weeks in lighter skin!)
+
+CRITICAL DISTINCTION:
+Active vs Resolving disease
+
+ACTIVE INFLAMMATION:
+- Elevated (papule/plaque)
+- Texture change (rough, scaly)
+- Symptoms (itch, pain)
+- May have erythema (purple/violet/gray)
+
+RESOLVING WITH PIH:
+- Flattening but still hyperpigmented
+- Scale resolving
+- Symptoms decreasing
+- = IMPROVING! (Don't mistake for worsening!)
+
+PURE PIH (post-treatment):
+- Completely flat
+- No symptoms
+- No scale
+- = HEALED, just residual pigment
+
+Conditions with Prominent PIH in Skin of Color:
+- Acne (major psychological impact!)
+- Atopic dermatitis
+- Lichen planus
+- Insect bites
+- Any inflammatory dermatosis
+
+PIH Management:
+- Sunscreen CRITICAL (prevents darkening)
+- Patience! (6-12 months minimum, often longer)
+- Topical: Hydroquinone, tretinoin, vitamin C, niacinamide
+- Chemical peels (cautiously - can worsen if too aggressive!)
+- Laser (carefully - risk paradoxical darkening!)
+
+═══════════════════════════════════════════
+DISEASE-SPECIFIC VARIATIONS
+═══════════════════════════════════════════
+
+ATOPIC DERMATITIS IN SKIN OF COLOR:
+
+Presentation differences:
+- EXTENSOR surfaces (front of elbows/knees) >>> Flexural
+  → In lighter skin: Flexural is classic
+  → In darker skin: Either pattern possible!
+
+- Follicular prominence (papules around hair follicles)
+- Papular variant more common
+- Lichenification earlier and more severe
+- Purple-gray color (NOT red!)
+
+PSORIASIS IN SKIN OF COLOR:
+
+- Purple, violet, gray-brown plaques (NOT salmon-pink!)
+- Scale may be gray/white (vs silvery in lighter skin)
+- Nail changes similar prevalence
+- Distribution similar
+
+ACNE IN SKIN OF COLOR:
+
+- PIH is MAJOR concern (often worse than active acne!)
+- Keloid risk higher (especially jawline, chest, back)
+- Pseudofolliculitis barbae (ingrown hairs from shaving)
+- Treatment considerations:
+  * Avoid aggressive treatments (can worsen PIH)
+  * Emphasize early PIH prevention
+  * Sunscreen compliance critical
+
+═══════════════════════════════════════════
+MELANOMA IN SKIN OF COLOR
+═══════════════════════════════════════════
+
+🚨 CRITICAL: Worse outcomes despite lower incidence!
+
+5-year survival disparity:
+- White patients: ~93%
+- Black patients: ~69%
+
+Why? LATER STAGE AT DIAGNOSIS (delayed detection!)
+
+ACRAL LENTIGINOUS MELANOMA (ALM):
+Most common melanoma subtype in people of color
+
+Locations:
+- Palms
+- Soles (most common!)
+- Subungual (under nails)
+- Mucosal (oral, genital, nasal)
+
+NOT sun-related! Different biology than superficial spreading melanoma.
+
+RED FLAGS for ALM:
+🚨 ANY pigmented lesion on palms/soles
+🚨 Longitudinal pigmented band in nail (melanonychia striata)
+🚨 Hutchinson's sign: Pigment spreads to nail fold/cuticle (CRITICAL!)
+🚨 Expanding dark macule on sole
+🚨 Pigmented oral/genital lesion
+
+ABCDE still applies but:
+- Asymmetry: Yes
+- Border: Very irregular
+- Color: May be uniform dark brown/black (vs variegated)
+- Diameter: Often > 6mm at detection (presentation delay)
+- Evolution: ANY change!
+
+ACTION: ZERO tolerance for false negatives!
+→ URGENT dermatology referral + biopsy for ANY:
+   * Acral pigmented lesion
+   * Changing nail band
+   * Hutchinson's sign
+   * Mucosal pigmentation
+
+═══════════════════════════════════════════
+SEVERITY SCORING BIAS
+═══════════════════════════════════════════
+
+⚠️ Standard severity scales UNDERESTIMATE disease in darker skin!
+
+Problem:
+- EASI, IGA, PASI scores heavily weight erythema
+- Erythema less visible in dark skin
+- → Falsely "mild" scores → Under-treatment!
+
+Solution: Weight NON-ERYTHEMA factors MORE:
+
+ASSESS SEVERITY BASED ON:
+✓ EXTENT: Body surface area (%)
+✓ SCALE: Amount, thickness, distribution
+✓ INDURATION: Plaque elevation (palpation!)
+✓ SYMPTOMS: Itch severity (0-10 scale)
+✓ LICHENIFICATION: Chronicity marker
+✓ EXCORIATION: Scratch marks (severe itch!)
+✓ SLEEP DISRUPTION: Quality of life impact
+✓ FUNCTIONAL IMPACT: Daily activities affected
+
+Severity classification:
+- MILD: < 10% BSA, minimal symptoms, life unaffected
+- MODERATE: 10-20% BSA, moderate symptoms, some life impact
+- SEVERE: > 20% BSA OR intensive symptoms OR sleep loss OR significant QOL impact
+
+Do NOT under-call severity just because erythema not bright red!
+
+═══════════════════════════════════════════
+HAIR & SCALP CONDITIONS
+═══════════════════════════════════════════
+
+Unique Considerations:
+
+CENTRAL CENTRIFUGAL CICATRICIAL ALOPECIA (CCCA):
+- Most common scarring alopecia in Black women
+- Starts at crown/vertex, expands outward
+- Permanent hair loss if not treated early!
+- Associated with tight hairstyles, heat styling, relaxers
+- URGENT dermatology referral (prevent progression!)
+
+PSEUDOFOLLICULITIS BARBAE ("Razor bumps"):
+- Ingrown hairs from shaving (curved hair re-enters skin)
+- Common in Black men (beard area)
+- Papules, pustules, PIH
+- Management: Stop shaving/grow beard, chemical depilatories, laser
+
+TRACTION ALOPECIA:
+- From tight braids, weaves, extensions
+- Hair loss at hairline/temples
+- Reversible if caught early, permanent if chronic
+- Counsel on looser styles
+
+═══════════════════════════════════════════
+KELOID & HYPERTROPHIC SCAR RISK
+═══════════════════════════════════════════
+
+⚠️ Much higher risk in darker skin (especially Types V-VI)
+
+High-risk sites:
+- Earlobes (piercings!)
+- Chest, shoulders, upper back
+- Jawline
+
+Triggers:
+- Piercings
+- Acne
+- Trauma
+- Surgery
+
+ Keloid vs Hypertrophic Scar:
+- Keloid: Extends BEYOND original wound, does NOT regress
+- Hypertrophic: Stays within wound, may flatten over time
+
+Prevention:
+- Counsel patients on keloid risk BEFORE procedures
+- Avoid unnecessary piercings/tattoos in high-risk areas
+- Early treatment of acne (prevent scarring)
+
+Treatment (challenging!):
+- Intralesional corticosteroids
+- Silicone sheets
+- Cryotherapy
+- Laser (cautiously)
+- Excision + radiation (high recurrence risk)
+
+═══════════════════════════════════════════
+CULTURAL & SOCIAL CONSIDERATIONS
+═══════════════════════════════════════════
+
+SKIN LIGHTENING products:
+- Ask about use (hydroquinone, steroids, mercury-containing!)
+- Exogenous ochronosis risk (paradoxical darkening from hydroquinone overuse)
+- Steroid-induced skin atrophy, telangiectasia
+
+HAIR CARE PRACTICES:
+- Relaxers, perms (chemical scalp burns, alopecia risk)
+- Tight braids/weaves (traction alopecia)
+- Heat styling (CCCA risk)
+
+TRADITIONAL/HERBAL Remedies:
+- Ask about non-prescription treatments
+- Some may cause contact dermatitis or interactions
+
+SUNSCREEN USE:
+- Lower rates in skin of color (myth: "Don't need sunscreen")
+- REALITY: Still need sun protection!
+  * Prevent PIH darkening
+  * Prevent skin cancer (yes, it happens!)
+  * Prevent photosensitivity reactions
+- Recommend tinted/sheer mineral sunscreens (avoid white cast)
+
+═══════════════════════════════════════════
+SYSTEMATIC EVALUATION CHECKLIST
+═══════════════════════════════════════════
+
+For Fitzpatrick IV-VI patients, ALWAYS assess:
+
+□ Erythema present? If yes: Color = purple/violet/gray/brown?
+□ Warmth present? (Ask patient, more reliable than color!)
+□ Texture changes? (Thickened, lichenified, rough)
+□ Elevation? (Check oblique lighting for shadows)
+□ Symptoms? Itch (/10), pain, burning
+□ Scale? Type, color, distribution
+□ PIH present? Active disease vs PIH vs both?
+□ Acral/mucosal involvement? (Melanoma screening!)
+□ Nail changes? (Melanonychia = pigmented band)
+□ Hair loss pattern? (CCCA, traction, pseudofolliculitis)
+□ Keloid/scar history? (Counsel on risk)
+□ Severity: BSA%, symptoms, QOL (NOT just erythema!)
+
+═══════════════════════════════════════════
+TREATMENT MODIFICATIONS
+═══════════════════════════════════════════
+
+General Principles:
+- Start gentle (avoid iatrogenic PIH!)
+- Emphasize PIH prevention early
+- Sunscreen counseling mandatory
+- Cultural sensitivity in hair/skin care discussions
+
+Topical Corticosteroids:
+- Use lowest effective potency
+- Shorter duration (higher PIH risk with inflammation)
+- Monitor for steroid-induced hypopigmentation (especially dark skin!)
+
+Retinoids:
+- Start low, go slow (irritation → PIH)
+- Emphasize moisturizer buffer
+
+Chemical Peels/Lasers:
+- CAUTION! Risk paradoxical hyperpigmentation
+- Test spot first
+- Only by experienced providers
+
+═══════════════════════════════════════════
+OUTPUT FORMAT
+═══════════════════════════════════════════
+
+FITZPATRICK TYPE: {fitzpatrick_type}
+
+PRIMARY DIAGNOSIS: ___________
+Confidence: ____%
+
+SKIN OF COLOR SPECIFIC FINDINGS:
+- Erythema presentation: [purple/violaceous/grayish/subtle darkening]
+- Alternative cues used: [warmth/texture/elevation/symptoms]
+- PIH present: [Yes - active disease / Yes - resolving / Yes - pure PIH / No]
+- Acral/mucosal involvement: [Yes → URGENT melanoma screening! / No]
+
+DIFFERENTIAL DIAGNOSES:
+1. ___________
+2. ___________
+3. ___________
+
+SEVERITY ASSESSMENT (Fitzpatrick-Adjusted):
+- Body Surface Area: ___%
+- Symptom Score: [Mild/Moderate/Severe]
+- QOL Impact: [Minimal/Moderate/Significant]
+- Overall Severity: [Mild/Moderate/Severe]
+
+SKIN OF COLOR COUNSELING POINTS:
+- PIH risk: [High/Moderate/Low]
+- Expected PIH duration: ___________
+- Sunscreen importance: [Emphasized]
+- Keloid risk: [High at this site / Moderate / Low]
+- Hair care considerations: ___________
+
+MANAGEMENT:
+- Treatment: ___________
+- PIH prevention: ___________
+- Follow-up: ___________
+
+URGENCY: [ROUTINE / URGENT / EMERGENCY]
+
+⚠️ CRITICAL SAFETY:
+If acral/mucosal pigmented lesion OR Hutchinson's sign → URGENT dermatology referral!
